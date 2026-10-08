@@ -1,0 +1,5 @@
+SKU,Name,Price,Category,Weight
+SKU-001,"Mountain Bike, 29""",399.00,"Bikes, Mountain",17
+SKU-002,City Bike,299.50,Bikes,15.5
+SKU-003,Kids Bike,149.99,"Bikes, Kids",9
+SKU-004,Helmet,49.00,Accessories,0.4

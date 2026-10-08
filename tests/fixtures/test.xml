@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<result>
+  <products_output items="520" l_person="212" l_company="10160" version="1.0">
+    <product_output>
+      <id>189389</id>
+      <is_active>1</is_active>
+      <product_type key="0">Standarta produkts</product_type>
+      <code><![CDATA[SZ1U29424DA BLACK/BLUE]]></code>
+      <article/>
+      <ean_code><![CDATA[8001446121702]]></ean_code>
+      <ecom_guid>PO/8210/189389</ecom_guid>
+      <customs_code/>
+      <code_for_fast_search><![CDATA[]]></code_for_fast_search>
+      <created>2021-02-23 14:56:07</created>
+      <updated>2021-02-23 14:56:07</updated>
+      <info>
+        <title_short/>
+        <title>
+          <lv><![CDATA[Itāļu Kalnu velosipēds Hogan MTB 29'' - 42cm melns/zils]]></lv>
+          <en><![CDATA[HOGAN MTB MAN Bike - Black with Blue (Wheel Size: 29")]]></en>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </title>
+        <description>
+          <lv><![CDATA[Rāmja materiāls:Alumīnijs
+Dakšas tips:Ar amortizāciju
+Dakšas modelis:Amortizācijas dakša
+Amortizators aizmugurē:Nē
+Stūre:Tērauda
+Priekšējo bremžu tips:Disku, mehāniskās
+Aizmugures bremžu tips:Disku, mehāniskās
+Bremžu modelis:Mehāniskās disku bremzes
+Pārnesumu skaits:21
+Priekšējā zobrata mehānisms:Shimano
+Aizmugurējā zobrata mehānisms:Shimano TZ500
+Riteņa pārkare:Tērauda]]></lv>
+          <en><![CDATA[<p>Frame material: Steel<br>Fork type: With damping<br>Fork model: Suspension fork<br>Rear shock absorber: No<br>Steering wheel: Steel<br>Front brake type: Disc, mechanical<br>Rear brake type: Disc, mechanical<br>Brake model: Mechanical disc brakes<br>Number of gears: 21<br>Front gear mechanism: Shimano<br>Rear gear mechanism: Shimano TZ500<br>Wheel overhang:Steel</p>]]></en>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </description>
+        <images/>
+        <country>
+          <code/>
+        </country>
+      </info>
+      <links>
+        <group id="5898"><![CDATA[Kalnu velosipēdi]]></group>
+        <manufacturer id="1371" country_code=""><![CDATA[FREJUS]]></manufacturer>
+        <manufacturer_brand id=""/>
+        <manufacturer_line id=""/>
+      </links>
+      <properties/>
+      <delivery>
+        <size_unit key="default">default</size_unit>
+        <size_quant_in_unit>1</size_quant_in_unit>
+        <pack_size_weight>20</pack_size_weight>
+        <size_quant_in_box/>
+        <size_quant_in_palet/>
+        <size_weight source="">20</size_weight>
+        <size_height>105</size_height>
+        <size_width>22</size_width>
+        <size_length>175</size_length>
+        <size_volume/>
+        <arrival>
+          <days>0</days>
+        </arrival>
+      </delivery>
+      <order>
+        <minimal_order_summ/>
+        <minimal_order_items/>
+        <minimal_order_step/>
+      </order>
+      <type_data/>
+      <stock version="1.1" mode="1" value="0" days_to_arrival="0">0</stock>
+      <prices version="1.1">
+        <price markup_id="23" active_from="" active_to="" warehouse_id="1016" variation_id="0" vat="21" currency="eur">
+          <dealer wovat="329.75" is_sale="0" price_wo_sale="">399.0000</dealer>
+          <recommended>696.9600</recommended>
+          <minimal/>
+        </price>
+      </prices>
+    </product_output>
+    <product_output>
+      <id>189393</id>
+      <is_active>1</is_active>
+      <product_type key="0">Standarta produkts</product_type>
+      <code><![CDATA[SMU29221DA BLACK]]></code>
+      <article/>
+      <ean_code><![CDATA[8001446118139]]></ean_code>
+      <ecom_guid>PO/8210/189393</ecom_guid>
+      <customs_code/>
+      <code_for_fast_search><![CDATA[]]></code_for_fast_search>
+      <created>2021-02-23 14:56:07</created>
+      <updated>2021-02-23 14:56:07</updated>
+      <info>
+        <title_short/>
+        <title>
+          <lv><![CDATA[Kalnu velosipēds Hogan MTB Man 29" melns - zaļš]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </title>
+        <description>
+          <lv><![CDATA[<p>TĒRAUDA RĀMIS</p><p>DAKŠA AR AMORTIZATORU</p><p>SHIMANO AIZMUGURĒJAIS PĀRSLĒDZĒJS TZ 500</p><p>PUSH/PULL PĀRSLĒDZĒJS 21</p><p>PRIEKŠĒJĀS UN AIZMĒRĒJĀS DISKU BREMZES</p><p>MELNI DISKI</p>]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </description>
+        <images>
+          <image><![CDATA[http://img.veikaliem.lv/312/WhatsApp Image 2022-06-14 at 9.spm.243595-o1997684.jpeg]]></image>
+          <image><![CDATA[http://img.veikaliem.lv/312/WhatsApp Image 2022-06-14 at 9.spm.243595-o1997681.jpeg]]></image>
+          <image><![CDATA[http://img.veikaliem.lv/312/WhatsApp Image 2022-06-14 at 9.spm.243595-o1997682.jpeg]]></image>
+          <image><![CDATA[http://img.veikaliem.lv/312/WhatsApp Image 2022-06-14 at 9.spm.243595-o1997683.jpeg]]></image>
+          <image><![CDATA[http://img.veikaliem.lv/312/WhatsApp Image 2022-06-14 at 9.spm.243595-o1997685.jpeg]]></image>
+        </images>
+        <country>
+          <code/>
+        </country>
+      </info>
+      <links>
+        <group id="5898"><![CDATA[Kalnu velosipēdi]]></group>
+        <manufacturer id="1493" country_code=""><![CDATA[Masciaghi]]></manufacturer>
+        <manufacturer_brand id=""/>
+        <manufacturer_line id=""/>
+      </links>
+      <properties>
+        <property code="top">Top prece</property>
+      </properties>
+      <delivery>
+        <size_unit key="default">default</size_unit>
+        <size_quant_in_unit>1</size_quant_in_unit>
+        <pack_size_weight>2</pack_size_weight>
+        <size_quant_in_box/>
+        <size_quant_in_palet/>
+        <size_weight source="">17</size_weight>
+        <size_height>90</size_height>
+        <size_width>28</size_width>
+        <size_length>170</size_length>
+        <size_volume/>
+        <arrival>
+          <days>0</days>
+        </arrival>
+      </delivery>
+      <order>
+        <minimal_order_summ/>
+        <minimal_order_items/>
+        <minimal_order_step/>
+      </order>
+      <type_data/>
+      <stock version="1.1" mode="1" value="0" days_to_arrival="0">0</stock>
+      <prices version="1.1">
+        <price markup_id="23" active_from="" active_to="" warehouse_id="1016" variation_id="0" vat="21" currency="eur">
+          <dealer wovat="271.9" is_sale="0" price_wo_sale="">329.0000</dealer>
+          <recommended>542.0800</recommended>
+          <minimal/>
+        </price>
+      </prices>
+    </product_output>
+    <product_output>
+      <id>189395</id>
+      <is_active>1</is_active>
+      <product_type key="0">Standarta produkts</product_type>
+      <code><![CDATA[SMU27221DA BLACK/RED]]></code>
+      <article/>
+      <ean_code><![CDATA[8001446118122]]></ean_code>
+      <ecom_guid>PO/8210/189395</ecom_guid>
+      <customs_code/>
+      <code_for_fast_search><![CDATA[]]></code_for_fast_search>
+      <created>2021-02-23 14:56:07</created>
+      <updated>2021-02-23 14:56:07</updated>
+      <info>
+        <title_short/>
+        <title>
+          <lv><![CDATA[Itāļu kalnu velosipēds HOGAN MTB 27.5" melns/sarkans]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </title>
+        <description>
+          <lv><![CDATA[Riteņa izmērs: 29".
+Pārnesumu skaits: 21.
+Ieteicams augumam: 170-180 cm.
+Rāmis: tērauds.
+Dakša: tērauda amortizējoša.
+Sēdeklis: Sportisks, ergonomisks, regulējams.
+Bremzes: mehāniskie diski.
+Pedāļi: plastmasas ar atstarotājiem.
+Pārnesumu pārslēgšanas rokturis: Saiguan push/pull.
+Aizmugurējais pārnesumu pārslēdzējs: Shimano TY-300.
+Riteņi: alumīnijs.
+Atbalsta kājiņa.
+Svars: 17 kg.]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </description>
+        <images>
+          <image><![CDATA[http://312.veikaliem.lv/img/s_product_image.php?public=241849-1-312-0&c=94a25]]></image>
+          <image><![CDATA[http://312.veikaliem.lv/img/s_product_image.php?public=241849-2-312-0&c=94a25]]></image>
+          <image><![CDATA[http://312.veikaliem.lv/img/s_product_image.php?public=241849-3-312-0&c=94a25]]></image>
+          <image><![CDATA[http://312.veikaliem.lv/img/s_product_image.php?public=241849-4-312-0&c=94a25]]></image>
+          <image><![CDATA[http://312.veikaliem.lv/img/s_product_image.php?public=241849-5-312-0&c=94a25]]></image>
+        </images>
+        <country>
+          <code/>
+        </country>
+      </info>
+      <links>
+        <group id="5898"><![CDATA[Kalnu velosipēdi]]></group>
+        <manufacturer id="1493" country_code=""><![CDATA[Masciaghi]]></manufacturer>
+        <manufacturer_brand id=""/>
+        <manufacturer_line id=""/>
+      </links>
+      <properties/>
+      <delivery>
+        <size_unit key="default">default</size_unit>
+        <size_quant_in_unit/>
+        <pack_size_weight/>
+        <size_quant_in_box/>
+        <size_quant_in_palet/>
+        <size_weight source="p_group:5898">15</size_weight>
+        <size_height>80</size_height>
+        <size_width>22</size_width>
+        <size_length>152</size_length>
+        <size_volume/>
+        <arrival>
+          <days>0</days>
+        </arrival>
+      </delivery>
+      <order>
+        <minimal_order_summ/>
+        <minimal_order_items/>
+        <minimal_order_step/>
+      </order>
+      <type_data/>
+      <stock version="1.1" mode="1" value="0" days_to_arrival="0">0</stock>
+      <prices version="1.1">
+        <price markup_id="23" active_from="" active_to="" warehouse_id="1016" variation_id="0" vat="21" currency="eur">
+          <dealer wovat="288.43" is_sale="0" price_wo_sale="">349.0000</dealer>
+          <recommended>532.4000</recommended>
+          <minimal/>
+        </price>
+      </prices>
+    </product_output>
+    <product_output>
+      <id>189408</id>
+      <is_active>1</is_active>
+      <product_type key="0">Standarta produkts</product_type>
+      <code><![CDATA[SMD26118B BLACK/PINK]]></code>
+      <article/>
+      <ean_code><![CDATA[8001446118283]]></ean_code>
+      <ecom_guid>PO/8210/189408</ecom_guid>
+      <customs_code/>
+      <code_for_fast_search><![CDATA[]]></code_for_fast_search>
+      <created>2021-02-23 14:56:08</created>
+      <updated>2021-02-23 14:56:08</updated>
+      <info>
+        <title_short/>
+        <title>
+          <lv><![CDATA[Pusaudžu velosipēds Frejus Lady 26'' melns - rozā]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </title>
+        <description>
+          <lv><![CDATA[Rāmis: tērauda
+Dakša: tērauda
+Stūre: regulējama
+Aizmugurējie pārslēdzēji: Saiguan
+Pārslēdzēju rokturis: Frikcijas
+Ātrumi: 18
+Aizmugurējie zobrati: 6
+Priekšējie zobrati: 3
+Riepas: Kenda
+Rata izmērs: 26”
+Diski: alumīnija
+Bremzes: alumīnija V-veida
+Pedāļi: plastmasas ar atstarotāju
+Atbalsta kāja: IR
+Aizmugurējais apgaismojums: NAV
+Priekšējais apgaismojums: NAV
+Augumam: 145+
+Vecumam: 11+
+Sēdeklis: sport ergonomic (regulējams)
+Krāsa: melna ar rozā
+Svars: 14 kg
+Ražotājvalsts: Itālija]]></lv>
+          <en/>
+          <ru/>
+          <de/>
+          <lt/>
+          <ee/>
+          <fi/>
+        </description>
+        <images>
+          <image><![CDATA[http://img.veikaliem.lv/312/xsas.spm.241862-o2855581.jpeg]]></image>
+        </images>
+        <country>
+          <code/>
+        </country>
+      </info>
+      <links>
+        <group id="5898"><![CDATA[Kalnu velosipēdi]]></group>
+        <manufacturer id="1371" country_code=""><![CDATA[FREJUS]]></manufacturer>
+        <manufacturer_brand id=""/>
+        <manufacturer_line id=""/>
+      </links>
+      <properties/>
+      <delivery>
+        <size_unit key="default">default</size_unit>
+        <size_quant_in_unit>1</size_quant_in_unit>
+        <pack_size_weight/>
+        <size_quant_in_box/>
+        <size_quant_in_palet/>
+        <size_weight source="">14</size_weight>
+        <size_height>110</size_height>
+        <size_width>18</size_width>
+        <size_length>176</size_length>
+        <size_volume/>
+        <arrival>
+          <days>0</days>
+        </arrival>
+      </delivery>
+      <order>
+        <minimal_order_summ/>
+        <minimal_order_items/>
+        <minimal_order_step/>
+      </order>
+      <type_data/>
+      <stock version="1.1" mode="1" value="0" days_to_arrival="0">0</stock>
+      <prices version="1.1">
+        <price markup_id="23" active_from="" active_to="" warehouse_id="1016" variation_id="0" vat="21" currency="eur">
+          <dealer wovat="82.64" is_sale="0" price_wo_sale="">100.0000</dealer>
+          <recommended>348.4800</recommended>
+          <minimal/>
+        </price>
+      </prices>
+    </product_output>
+  </products_output>
+</result>

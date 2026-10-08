@@ -1,0 +1,1918 @@
+/**
+ * wpezimport Admin Styles
+ */
+
+/* General styles */
+.wpezimport-admin-container {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.wpezimport-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.wpezimport-intro {
+    margin-bottom: 20px;
+}
+
+/* Import Info Box (shown when editing) */
+.wpezimport-import-info-box {
+    background: #f0f6fc;
+    border: 1px solid #c3c4c7;
+    border-left: 4px solid #2271b1;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.wpezimport-import-info-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.wpezimport-info-table {
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.wpezimport-info-table th,
+.wpezimport-info-table td {
+    padding: 5px 10px 5px 0;
+    vertical-align: top;
+    text-align: left;
+}
+
+.wpezimport-info-table th {
+    font-weight: 600;
+    color: #50575e;
+    white-space: nowrap;
+}
+
+.wpezimport-info-table code {
+    background: #fff;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+/* Radio group styling */
+.wpezimport-radio-group {
+    border: none;
+    padding: 0;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wpezimport-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.wpezimport-radio-group input[type="radio"] {
+    margin: 0;
+}
+
+/* Collapsible section styling */
+.wpezimport-collapsible-section {
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+}
+
+.wpezimport-collapsible-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    background: #f0f0f1;
+    border-bottom: 1px solid transparent;
+    gap: 8px;
+}
+
+.wpezimport-collapsible-header:hover {
+    background: #e8e8e8;
+}
+
+.wpezimport-collapsible-header h4 {
+    margin: 0;
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.wpezimport-collapsible-header .dashicons {
+    transition: transform 0.2s;
+    color: #646970;
+}
+
+.wpezimport-collapsible-hint {
+    color: #646970;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.wpezimport-collapsible-content {
+    display: none;
+    padding: 15px;
+    background: #fff;
+}
+
+.wpezimport-collapsible-section.expanded .wpezimport-collapsible-header {
+    border-bottom-color: #c3c4c7;
+}
+
+.wpezimport-collapsible-section.expanded .wpezimport-collapsible-header .dashicons {
+    transform: rotate(90deg);
+}
+
+.wpezimport-collapsible-section.expanded .wpezimport-collapsible-content {
+    display: block;
+}
+
+.wpezimport-help {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #72aee6;
+}
+
+/* Tabs styles - REMOVED: Tabs replaced with separate forms */
+/*
+.wpezimport-tabs {
+    margin-top: 15px;
+}
+
+.wpezimport-tab-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.wpezimport-tab-nav li {
+    margin: 0 4px 0 0;
+}
+
+.wpezimport-tab-nav li a {
+    display: block;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #555;
+    background: #f1f1f1;
+    border: 1px solid #ccd0d4;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+}
+
+.wpezimport-tab-nav li.active a {
+    background: #fff;
+    color: #000;
+    border-bottom: 1px solid #fff;
+    margin-bottom: -1px;
+}
+
+.wpezimport-tab-content {
+    padding: 20px 0 0;
+}
+
+.wpezimport-tab-pane {
+    display: none;
+}
+
+.wpezimport-tab-pane.active {
+    display: block;
+}
+*/
+
+/* File upload styles */
+.wpezimport-file-upload {
+    margin-bottom: 20px;
+}
+
+.wpezimport-file-select {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.wpezimport-file-select-button {
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+}
+
+.wpezimport-file-select-name {
+    background-color: #fff;
+    padding: 10px 15px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    width: calc(100% - 150px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wpezimport-file-select input[type=file] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.wpezimport-supported-formats {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+/* URL Import styles */
+.wpezimport-form-group {
+    margin-bottom: 20px;
+}
+
+.wpezimport-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.wpezimport-form-group input[type=url] {
+    width: 100%;
+    max-width: 500px;
+}
+
+.wpezimport-form-group .description {
+    margin-top: 5px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Loader styles */
+.wpezimport-loader {
+    display: none;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.wpezimport-loader .spinner {
+    visibility: visible;
+    margin-top: 0;
+    margin-right: 10px;
+}
+
+.wpezimport-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.wpezimport-right-buttons {
+    display: flex;
+    align-items: center;
+}
+
+/* Table styles */
+.wpezimport-table-wrapper {
+    margin-top: 15px;
+    overflow-x: auto;
+}
+
+.wpezimport-table-wrapper table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.wpezimport-preview-table th,
+.wpezimport-preview-table td {
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #ddd;
+}
+
+.wpezimport-preview-table th {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+.wpezimport-preview-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Mapping page styles */
+.wpezimport-mapping-container {
+    margin-bottom: 20px;
+}
+
+.wpezimport-mapping-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.wpezimport-mapping-target {
+    flex: 1;
+    min-width: 350px;
+}
+
+.wpezimport-mapping-source {
+    flex: 0 0 35%;
+    min-width: 300px;
+    position: sticky;
+    top: 32px; /* WordPress admin bar height */
+    align-self: flex-start;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.wpezimport-mapping-panels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.wpezimport-panel {
+    flex: 1;
+    min-width: 300px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+}
+
+.wpezimport-wp-fields-panel {
+    background: #f5f5f5;
+}
+
+.wpezimport-imported-columns-panel {
+    background: #f8f8f8;
+}
+
+.wpezimport-field-group {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-field-group:last-child {
+    border-bottom: none;
+}
+
+.wpezimport-woo-fields {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-woo-fields > h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wpezimport-woo-fields > h4 .dashicons-cart {
+    color: #96588a;
+}
+
+/* Form field with top margin (for checkboxes under textareas) */
+.wpezimport-form-field-mt {
+    margin-top: 8px;
+}
+
+/* Stock status description */
+.wpezimport-stock-status-desc {
+    margin-top: 5px;
+}
+
+/* Weight/Dimensions input wrap */
+.wpezimport-unit-wrap {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.wpezimport-unit-wrap input {
+    flex: 1;
+    min-width: 150px;
+}
+
+.wpezimport-unit-wrap select {
+    width: auto;
+    min-width: 60px;
+}
+
+/* Dimensions field wrap */
+.wpezimport-dimensions-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.wpezimport-dimensions-wrap select {
+    width: auto;
+    min-width: 60px;
+}
+
+/* Post title field */
+.wpezimport-post-title-field {
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Save import options box */
+#save-import-options {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+/* Mapping loader (hidden by default) */
+#wpezimport-mapping-loader {
+    display: none;
+}
+
+.wpezimport-field-mapping-row {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.wpezimport-field-mapping-row label {
+    flex: 0 0 150px;
+    font-weight: 500;
+}
+
+.wpezimport-field-input-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.wpezimport-update-column-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+    padding-right: 5px;
+}
+
+.wpezimport-update-column-header span {
+    flex: 0 0 60px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 12px;
+    color: #666;
+    margin-left: 15px;
+}
+
+.wpezimport-update-checkbox {
+    flex: 0 0 60px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 15px;
+}
+
+.wpezimport-update-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.wpezimport-update-checkbox label {
+    display: none;
+}
+
+.wpezimport-field-input-container input {
+    flex: 1;
+}
+
+.wpezimport-columns-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 10px;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.wpezimport-reupload-section {
+    padding: 15px;
+}
+
+.wpezimport-reupload-section .wpezimport-notice {
+    color: #826200;
+    background: #fff8e5;
+    border-left: 4px solid #dba617;
+    padding: 10px 12px;
+    margin: 0 0 12px;
+}
+
+.wpezimport-reupload-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.wpezimport-reupload-control input[type="file"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.wpezimport-reupload-control .button .dashicons {
+    vertical-align: middle;
+    margin-right: 2px;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+#wpezimport-reupload-status {
+    margin-top: 8px;
+}
+
+.wpezimport-imported-column {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 8px;
+    border-radius: 3px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.wpezimport-imported-column:hover {
+    background-color: #f0f0f0;
+    border-color: #c0c0c0;
+}
+
+.wpezimport-imported-column.dragging {
+    opacity: 0.5;
+    background-color: #e6f2ff;
+    border-color: #2271b1;
+}
+
+.wpezimport-imported-column .wpezimport-xpath-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.wpezimport-imported-column:hover .wpezimport-xpath-tooltip {
+    display: block;
+}
+
+.wpezimport-imported-column[data-xpath]:before {
+    content: "XPath";
+    display: inline-block;
+    background-color: #0073aa;
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.wpezimport-search-box {
+    margin-bottom: 15px;
+}
+
+.wpezimport-custom-fields-section {
+    margin-top: 20px;
+    border-top: 1px solid #e2e4e7;
+    padding-top: 15px;
+}
+
+.wpezimport-custom-field-adder {
+    margin-top: 20px;
+    border-top: 1px solid #e2e4e7;
+    padding-top: 15px;
+}
+
+.wpezimport-custom-field-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Custom Field Row Styles */
+.wpezimport-custom-field-row {
+    margin-bottom: 10px;
+}
+
+.wpezimport-field-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.wpezimport-field-input-group .wpezimport-field-name {
+    flex: 0 0 200px;
+}
+
+.wpezimport-field-input-group .wpezimport-field-name input {
+    width: 100%;
+}
+
+.wpezimport-field-input-group .wpezimport-field-value {
+    flex: 1;
+}
+
+.wpezimport-field-input-group .wpezimport-field-value input {
+    width: 100%;
+}
+
+.wpezimport-field-input-group .wpezimport-remove-custom-field {
+    flex-shrink: 0;
+    color: #a00;
+    border-color: #a00;
+}
+
+.wpezimport-field-input-group .wpezimport-remove-custom-field:hover {
+    background: #a00;
+    color: #fff;
+}
+
+.wpezimport-import-options {
+    padding: 20px;
+}
+
+.wpezimport-form-row {
+    margin-bottom: 15px;
+}
+
+.wpezimport-field-chip {
+    display: inline-block;
+    background-color: #e7f5fa;
+    color: #0071a1;
+    border: 1px solid #0071a1;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 2px;
+    font-size: 12px;
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+/* XML Structure Styles */
+.wpezimport-xml-sample {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    height: 100%;
+}
+
+/* CSV Options (delimiter/enclosure) */
+.wpezimport-csv-options {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.wpezimport-csv-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wpezimport-csv-option label {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.wpezimport-csv-option select {
+    min-width: 140px;
+}
+
+/* CSV/Excel Columns Styles */
+.wpezimport-csv-columns {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    height: 100%;
+}
+
+.wpezimport-columns-list {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+    max-height: calc(100vh - 250px);
+    overflow: auto;
+}
+
+.wpezimport-column-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+
+.wpezimport-column-item:hover {
+    background-color: #e7f5fa;
+    border-color: #0073aa;
+}
+
+.wpezimport-column-item:last-child {
+    margin-bottom: 0;
+}
+
+.wpezimport-column-item .dashicons {
+    color: #999;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.wpezimport-column-item:hover .dashicons {
+    color: #0073aa;
+}
+
+.wpezimport-column-name {
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.wpezimport-xml-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-product-counter {
+    font-size: 14px;
+    color: #666;
+}
+
+.wpezimport-xml-structure {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 10px;
+    overflow: auto;
+    font-family: monospace;
+    line-height: 1.5;
+    font-size: 14px;
+    max-height: calc(100vh - 250px);
+}
+
+.wpezimport-xml-full-context {
+    margin-bottom: 10px;
+}
+
+/* XML Tag styling */
+.wpezimport-xml-tag {
+    color: black;
+}
+
+.wpezimport-xml-parent {
+    position: relative;
+}
+
+.wpezimport-xml-parent-tag {
+    color: #727272;
+}
+
+/* Indent nested XML nodes using natural nesting */
+.wpezimport-xml-structure .wpezimport-xml-node {
+    margin-left: 20px;
+}
+.wpezimport-xml-structure > .wpezimport-xml-node {
+    margin-left: 0;
+}
+
+/* XML element styling */
+.wpezimport-xml-element {
+    display: inline-block;
+    cursor: grab;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    padding: 2px;
+    margin: 0;
+    position: relative; /* Required for absolute positioning of tooltip */
+}
+
+.wpezimport-xml-element:hover {
+    background-color: #e7f5fa;
+}
+
+.wpezimport-xml-element.dragging {
+    background-color: #e7f5fa;
+    outline: 2px solid #0071a1;
+    opacity: 0.7;
+}
+
+.wpezimport-xml-element-name {
+    color: #d63638;
+}
+
+.wpezimport-xml-element-value {
+    color: #008a20;
+}
+
+/* XPath tooltip */
+.wpezimport-xml-element-path {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 1000;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* Prevents the tooltip from interfering with interactions */
+    margin-bottom: 3px;
+}
+
+.wpezimport-xml-element:hover .wpezimport-xml-element-path {
+    display: block;
+}
+
+.wpezimport-error {
+    color: #d63638;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+.wpezimport-loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+/* Improve field mapping interaction */
+.wpezimport-field-pattern {
+    transition: all 0.2s;
+    border: 1px solid #ddd;
+}
+
+.wpezimport-field-pattern.highlight {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    background-color: #f0f7ff;
+}
+
+.wpezimport-field-preview {
+    margin-top: 5px;
+    padding: 5px 8px;
+    background-color: #f7f7f7;
+    border-radius: 3px;
+    border-left: 3px solid #2271b1;
+    font-size: 13px;
+    color: #666;
+    display: none;
+}
+
+.wpezimport-field-preview:not(:empty) {
+    display: block;
+}
+
+/* Import options section */
+.wpezimport-import-options {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.wpezimport-option-row {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.wpezimport-option-row label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.wpezimport-option-row select,
+.wpezimport-option-row input[type="text"] {
+    max-width: 300px;
+}
+
+.wpezimport-form-footer {
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+    text-align: right;
+}
+
+/* XML Sample Navigation */
+.wpezimport-xml-sample-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding: 10px 0;
+    border-top: 1px solid #ddd;
+}
+
+.wpezimport-sample-index {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    flex: 1;
+}
+
+.wpezimport-nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wpezimport-nav-button:hover {
+    background-color: #e0e0e0;
+}
+
+.wpezimport-nav-button:active {
+    background-color: #d0d0d0;
+}
+
+.wpezimport-nav-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.wpezimport-nav-button svg {
+    width: 16px;
+    height: 16px;
+    fill: #555;
+}
+
+/* Field Preview */
+.wpezimport-field-preview {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-left: 3px solid #2271b1;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12px;
+    color: #333;
+    min-height: 20px;
+    max-height: 100px;
+    overflow-y: auto;
+    display: none; /* Hidden by default, will be shown by JavaScript when there's content */
+}
+
+.wpezimport-field-preview.has-content {
+    display: block;
+}
+
+.wpezimport-field-preview.error {
+    border-left-color: #d63638;
+    background-color: #fcf0f1;
+}
+
+.wpezimport-field-preview.success {
+    border-left-color: #00a32a;
+    background-color: #f0f6e6;
+}
+
+/* Drag and Drop Styles */
+.wpezimport-dragging {
+    opacity: 0.7;
+}
+
+.wpezimport-drag-over {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    background-color: rgba(34, 113, 177, 0.1);
+}
+
+/* Field token styles */
+.wpezimport-field-token {
+    background-color: #e7f5fa;
+    color: #0071a1;
+    border: 1px solid #0071a1;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 0 2px;
+    font-size: 13px;
+    font-family: monospace;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* XML Tag Wrapper */
+.wpezimport-xml-tag-wrapper {
+    position: relative;
+    cursor: grab;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.wpezimport-xml-tag-wrapper:hover {
+    background-color: rgba(152, 195, 121, 0.1);
+    box-shadow: 0 0 0 1px rgba(152, 195, 121, 0.3);
+}
+
+.wpezimport-xml-tag-wrapper:hover::after {
+    content: 'Drag tag';
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.wpezimport-xml-tag-wrapper:active {
+    cursor: grabbing;
+    background-color: rgba(152, 195, 121, 0.2);
+}
+
+.wpezimport-xml-tag-wrapper.wpezimport-dragging {
+    opacity: 0.7;
+    background-color: rgba(152, 195, 121, 0.2);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 782px) {
+    .wpezimport-mapping-panels {
+        flex-direction: column;
+    }
+
+    .wpezimport-mapping-fields,
+    .wpezimport-mapping-source {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .wpezimport-xml-structure,
+    .wpezimport-xml-sample {
+        max-height: 300px;
+    }
+}
+
+/* Import progress styles */
+.wpezimport-import-progress {
+    margin-top: 20px;
+    display: none;
+}
+
+.wpezimport-progress-bar-container {
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.wpezimport-progress-bar {
+    height: 100%;
+    background-color: #2271b1;
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.wpezimport-import-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.wpezimport-import-errors {
+    margin-top: 20px;
+    display: none;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.wpezimport-import-actions {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.wpezimport-xml-tag-name {
+    color: black;
+    cursor: grab;
+}
+
+.wpezimport-xml-tag-name-contents {
+    color: #2271b1;
+    cursor: grab;
+    font-weight: bold;
+}
+
+/* XML empty content indicator */
+.wpezimport-xml-empty-content {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+    padding: 0 4px;
+}
+
+/* XML element wrapper */
+.wpezimport-xml-element-wrapper {
+    display: inline-block;
+    position: relative;
+    cursor: grab;
+    padding-left: 5px;
+}
+
+/* Improve the tag path tooltip visibility */
+.wpezimport-xml-tag .wpezimport-xml-element-path {
+    position: absolute;
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px 10px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    top: -30px;
+    left: 0;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.wpezimport-xml-tag:hover .wpezimport-xml-element-path {
+    visibility: visible;
+    opacity: 0.9;
+}
+
+/* Enhance drag-and-drop visuals for XML tags */
+.wpezimport-xml-tag[draggable="true"] {
+    cursor: grab;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 3px;
+    padding: 2px 4px;
+    transition: all 0.2s ease;
+}
+
+.wpezimport-xml-tag[draggable="true"]:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 3px rgba(0, 120, 215, 0.3);
+}
+
+.wpezimport-xml-tag.dragging {
+    opacity: 0.7;
+    background-color: rgba(0, 120, 215, 0.1);
+}
+
+/* Highlight empty XML elements to make them more visible */
+.wpezimport-xml-empty-content {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+    padding: 0 4px;
+    margin: 0 4px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 3px;
+}
+
+.wpezimport-draggable-attribute {
+    color: #28a745 !important; /* Green for draggable attributes */
+    cursor: grab;
+    font-weight: bold;
+}
+
+.wpezimport-draggable-tag {
+    background: #e3fcef;
+    border-radius: 3px;
+    cursor: grab;
+    transition: box-shadow 0.2s;
+}
+
+.wpezimport-dragging {
+    outline: 2px solid #28a745;
+    background: #d4f8e8 !important;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.2);
+}
+
+/* --- WooCommerce mapping block flex layout (self-contained) --- */
+.wpezimport-woo-flex {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    margin-top: 12px;
+}
+
+.wpezimport-woo-tabs {
+    flex: 0 0 180px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e5e5e5;
+    min-height: 100%;
+    background: #fafafa;
+    padding-top: 10px;
+}
+
+.wpezimport-woo-tab-list {
+    flex-direction: column;
+    gap: 0;
+    border: none;
+    background: none;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.wpezimport-woo-tab-item {
+    margin: 0 0 4px 0;
+    border: none;
+}
+
+.wpezimport-woo-tab-item a {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    background: #f6f6f6;
+    border-radius: 3px 0 0 3px;
+    border: none;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.wpezimport-woo-tab-item.active a,
+.wpezimport-woo-tab-item a:focus {
+    background: #fff;
+    color: #000;
+    font-weight: bold;
+}
+
+.wpezimport-woo-panels {
+    flex: 1 1 0%;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.wpezimport-woo-panel {
+    display: none;
+    background: #fff;
+    border-radius: 4px;
+    padding: 0 0 0 0;
+    box-shadow: none;
+}
+
+.wpezimport-woo-panel.active {
+    display: block;
+}
+
+/* ============================================
+   Import Process Results Styles
+   ============================================ */
+.wpezimport-results-box {
+    background-color: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.wpezimport-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.wpezimport-stat-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px;
+    color: white;
+}
+
+.wpezimport-stat-box.created {
+    background-color: #46b450;
+}
+
+.wpezimport-stat-box.stat-updated {
+    background-color: #00a0d2;
+}
+
+.wpezimport-stat-box.errors {
+    background-color: #dc3232;
+}
+
+.wpezimport-stat-box.skipped {
+    background-color: #dba617;
+}
+
+.wpezimport-stat-box.no_change {
+    background-color: #6c757d;
+}
+
+.wpezimport-stats-grid.has-extra-1 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.wpezimport-stats-grid.has-extra-2 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.wpezimport-resolved-item-status.skipped {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.wpezimport-stat-box .dashicons {
+    font-size: 40px;
+    height: 40px;
+    width: 40px;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.stat-label {
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.wpezimport-messages {
+    margin: 20px 0;
+}
+
+/* Resolved Items Styles */
+.wpezimport-resolved-items {
+    margin-top: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 15px;
+}
+
+.wpezimport-resolved-item {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.wpezimport-resolved-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f7f7f7;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.wpezimport-resolved-item-header:hover {
+    background: #f0f0f1;
+}
+
+.wpezimport-resolved-item-title {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.wpezimport-resolved-item-status {
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.wpezimport-resolved-item-status.created {
+    background: #d4edda;
+    color: #155724;
+}
+
+.wpezimport-resolved-item-status.updated {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.wpezimport-resolved-item-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.wpezimport-resolved-item-status.no_change {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.wpezimport-resolved-item-body {
+    padding: 15px;
+    display: none;
+}
+
+.wpezimport-resolved-item.expanded .wpezimport-resolved-item-body {
+    display: block;
+}
+
+.wpezimport-resolved-item-header .toggle-icon {
+    transition: transform 0.2s;
+    margin-right: 8px;
+}
+
+.wpezimport-resolved-item.expanded .wpezimport-resolved-item-header .toggle-icon {
+    transform: rotate(90deg);
+}
+
+.wpezimport-field-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.wpezimport-field-table th,
+.wpezimport-field-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-field-table thead th {
+    background: #f0f0f1;
+    font-weight: 600;
+}
+
+.wpezimport-field-table tbody th {
+    background: #f9f9f9;
+    font-weight: 600;
+    width: 30%;
+}
+
+.wpezimport-field-xpath {
+    color: #666;
+    font-family: monospace;
+    font-size: 11px;
+    display: block;
+    margin-top: 3px;
+}
+
+.wpezimport-field-value {
+    word-break: break-word;
+}
+
+.wpezimport-old-value {
+    word-break: break-word;
+    color: #666;
+    font-size: 12px;
+}
+
+.wpezimport-field-table.has-old-value tbody th {
+    width: 25%;
+}
+
+.wpezimport-field-table tr.no-change-row {
+    background: #f9f9f9;
+}
+
+.wpezimport-field-table tr.changed-row {
+    background: #fff8e5;
+}
+
+.no-change-indicator {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.wpezimport-resolution-info {
+    padding: 10px;
+    background: #f0f0f1;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.wpezimport-resolution-info strong {
+    color: #1d2327;
+}
+
+/* ID Resolution Styles */
+.wpezimport-id-resolution {
+    background: #fff8e5;
+    border: 1px solid #ffcc00;
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.wpezimport-id-resolution h4 {
+    margin: 0 0 10px 0;
+    color: #826200;
+    font-size: 13px;
+}
+
+.wpezimport-id-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wpezimport-id-table th,
+.wpezimport-id-table td {
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ffe6a0;
+}
+
+.wpezimport-id-table th {
+    width: 35%;
+    font-weight: 600;
+    color: #5a4700;
+}
+
+.wpezimport-id-table code {
+    background: #fff;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.wpezimport-id-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.wpezimport-id-status.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.wpezimport-id-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.wpezimport-id-status.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.wpezimport-id-status.updated {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.wpezimport-id-status.created {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Image Processing Styles */
+.wpezimport-image-statuses {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.wpezimport-image-statuses h4 {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #1d2327;
+}
+
+.wpezimport-image-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.wpezimport-image-table th,
+.wpezimport-image-table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-image-table th {
+    background: #f7f7f7;
+    font-weight: 600;
+}
+
+.wpezimport-image-url {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.wpezimport-image-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.wpezimport-image-status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.wpezimport-image-status.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.wpezimport-image-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.wpezimport-image-status.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.wpezimport-image-row.error {
+    background: #fff5f5;
+}
+
+.wpezimport-attach-id {
+    color: #666;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+/* ============================================
+   Import Confirm Page Styles
+   ============================================ */
+.wpezimport-confirm-box {
+    background-color: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.wpezimport-confirm-box .form-field {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.wpezimport-confirm-box .form-field select {
+    min-width: 300px;
+}
+
+/* ============================================
+   Manage Imports Page Styles
+   ============================================ */
+.wpezimport-notice-box {
+    background-color: #fff;
+    border-left: 4px solid #00a0d2;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.wpezimport-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.wpezimport-actions .button {
+    white-space: nowrap;
+}
+
+.wpezimport-actions .button.delete {
+    color: #a00;
+}
+
+.wpezimport-actions .button.delete:hover {
+    color: #dc3232;
+    border-color: #dc3232;
+}
+
+@media screen and (max-width: 1200px) {
+    .wpezimport-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ============================================
+   Statistics Page Styles
+   ============================================ */
+.wpezimport-import-info {
+    margin: 20px 0;
+}
+
+.wpezimport-import-info th {
+    width: 150px;
+    font-weight: 600;
+}
+
+.wpezimport-stat-created {
+    color: #46b450;
+    font-weight: 600;
+}
+
+.wpezimport-stat-updated {
+    color: #00a0d2;
+    font-weight: 600;
+}
+
+.wpezimport-stat-errors {
+    color: #dc3232;
+    font-weight: 600;
+}
+
+.wpezimport-stat-no-errors {
+    color: #82878c;
+}
+
+.wpezimport-stats-summary {
+    color: #666;
+    font-style: italic;
+    margin-top: 15px;
+}
+
+.wpezimport-actions-row .button {
+    margin-right: 10px;
+}
+
+/* ============================================
+   Schedule Page Styles
+   ============================================ */
+.wpezimport-schedule-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    padding: 15px 20px;
+    margin: 15px 0;
+}
+
+.wpezimport-schedule-section h2 {
+    margin-top: 5px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.wpezimport-copy-field {
+    cursor: pointer;
+    background-color: #f9f9f9 !important;
+}
+
+.wpezimport-crontab-example {
+    display: block;
+    padding: 8px 12px;
+    background: #23282d;
+    color: #a0d468;
+    border-radius: 3px;
+    margin: 5px 0 10px;
+    font-size: 12px;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.wpezimport-cron-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.wpezimport-cron-status-idle {
+    background: #e5e5e5;
+    color: #555;
+}
+
+.wpezimport-cron-status-triggered {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.wpezimport-cron-status-processing {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.wpezimport-progress-bar {
+    width: 200px;
+    height: 16px;
+    background: #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.wpezimport-progress-fill {
+    height: 100%;
+    background: #0073aa;
+    border-radius: 8px;
+    transition: width 0.3s ease;
+}
+
+.wpezimport-cron-log {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f6f7f7;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.wpezimport-cron-log-entry {
+    padding: 3px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+}
+
+.wpezimport-cron-log-entry:last-child {
+    border-bottom: none;
+}
+
+.wpezimport-cron-log-entry code {
+    background: transparent;
+    padding: 0;
+}

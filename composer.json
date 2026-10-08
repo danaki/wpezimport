@@ -1,0 +1,23 @@
+{
+    "name": "wpezimport/wpezimport",
+    "description": "Wordpress plugin for importing data",
+    "type": "project",
+    "license": "GPLv2",
+    "autoload": {
+        "psr-4": {
+            "Wpezimport\\Wpezimport\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yuri Pimenov",
+            "email": "pimenoff@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.1"
+    },
+    "require-dev": {
+        "10up/wp_mock": "^1.1"
+    }
+}
