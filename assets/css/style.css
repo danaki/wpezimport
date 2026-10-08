@@ -83,7 +83,7 @@ code {
     padding: 96px 0 110px;
     overflow: hidden;
 }
-.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+.hero-grid { display: block; max-width: 860px; }
 
 .badge {
     display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .4px;
@@ -96,7 +96,7 @@ code {
     line-height: 1.08; letter-spacing: -1.5px; font-weight: 800;
     margin-bottom: 20px;
 }
-.lede { font-size: 19px; color: #c3c6e8; max-width: 520px; margin-bottom: 32px; }
+.lede { font-size: 19px; color: #c3c6e8; max-width: 740px; margin-bottom: 32px; }
 
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
 .btn {
@@ -113,43 +113,6 @@ code {
 .btn-ghost:hover { border-color: rgba(255, 255, 255, .6); background: rgba(255,255,255,.06); }
 
 .hero-note { font-size: 14px; color: #8d91bd; }
-
-/* Decorative mock window */
-.hero-mock { perspective: 1200px; }
-.mock-window {
-    background: #fff; border-radius: 16px; overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255,255,255,.08);
-    transform: rotateY(-7deg) rotateX(2deg);
-}
-.mock-chrome {
-    display: flex; align-items: center; gap: 7px;
-    background: #eceef8; padding: 12px 16px;
-}
-.mock-dot { width: 11px; height: 11px; border-radius: 50%; background: #c9cddd; }
-.mock-dot:first-child { background: #ff5f57; }
-.mock-dot:nth-child(2) { background: #febc2e; }
-.mock-dot:nth-child(3) { background: #28c840; }
-.mock-title { margin-left: 10px; font-size: 12.5px; color: #7a7fa3; font-weight: 600; }
-.mock-body { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; padding: 20px; }
-.mock-field {
-    display: flex; justify-content: space-between; align-items: center;
-    border: 1px solid var(--line); border-radius: 10px;
-    padding: 11px 14px; margin-bottom: 10px; background: #fafbff;
-}
-.mock-label { font-size: 13px; font-weight: 600; color: var(--ink); }
-.mock-value {
-    font-family: var(--mono); font-size: 12px; color: var(--accent);
-    background: rgba(124, 92, 255, .10); border-radius: 6px; padding: 3px 9px;
-}
-.mock-source {
-    display: flex; flex-direction: column; gap: 9px;
-    border-left: 1px dashed #d8dbee; padding-left: 18px;
-}
-.mock-chip {
-    font-family: var(--mono); font-size: 12px; color: var(--ink-soft);
-    background: #f0f1fa; border: 1px solid var(--line);
-    border-radius: 8px; padding: 7px 12px;
-}
 
 /* ── Format strip ── */
 .formats { border-bottom: 1px solid var(--line); background: #fff; }
@@ -221,6 +184,7 @@ code {
 
 /* ── Screenshots ── */
 .shots { gap: 26px; }
+.shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .shot {
     border-radius: var(--radius); overflow: hidden;
     border: 1px solid var(--line); background: #fff;
@@ -228,14 +192,14 @@ code {
     transition: transform .18s, box-shadow .18s;
 }
 .shot:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-.shot img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.shot img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
 .shot figcaption {
     padding: 12px 16px; font-size: 13.5px; color: var(--ink-soft);
     border-top: 1px solid var(--line);
 }
 
 /* ── Cron section ── */
-.cron-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 40px; }
+.cron-grid { display: grid; grid-template-columns: 1fr; gap: 18px; max-width: 940px; margin: 0 auto 40px; }
 .cron-card {
     background: rgba(255, 255, 255, .05);
     border: 1px solid rgba(255, 255, 255, .12);
@@ -249,7 +213,7 @@ code {
     display: block; font-size: 12px; line-height: 1.5;
     background: rgba(0, 0, 0, .35); border: 1px solid rgba(255, 255, 255, .10);
     color: #9ef0c0; border-radius: 10px; padding: 12px 14px;
-    margin-bottom: 14px; overflow-x: auto; white-space: nowrap;
+    margin-bottom: 14px; white-space: normal; overflow-wrap: anywhere;
 }
 .cron-card p { font-size: 14px; color: #b9bce0; }
 
@@ -305,31 +269,13 @@ code {
 .req-box li strong { font-family: var(--mono); font-size: 13.5px; color: var(--woo); }
 .req-box p { font-size: 14px; color: var(--ink-soft); }
 
-/* ── FAQ ── */
-.faq-list { max-width: 760px; margin: 0 auto; }
-.faq-list details {
-    background: #fff; border: 1px solid var(--line); border-radius: 12px;
-    margin-bottom: 12px; overflow: hidden;
-}
-.faq-list summary {
-    cursor: pointer; padding: 18px 22px; font-weight: 600; font-size: 16px;
-    list-style: none; position: relative; padding-right: 48px;
-}
-.faq-list summary::-webkit-details-marker { display: none; }
-.faq-list summary::after {
-    content: "+"; position: absolute; right: 20px; top: 50%;
-    transform: translateY(-50%); font-size: 22px; color: var(--accent);
-    transition: transform .15s;
-}
-.faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
-.faq-list details p { padding: 0 22px 20px; color: var(--ink-soft); font-size: 15px; }
-
 /* ── Footer ── */
 .footer { background: var(--bg-dark); color: #fff; padding: 48px 0; }
 .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
 .footer .brand-name { color: #fff; }
 .footer-tag { color: #9a9ec7; font-size: 14px; margin-top: 8px; }
 .footer-meta { text-align: right; color: #9a9ec7; font-size: 14px; }
+.footer-meta a { color: #cfc6ff; }
 
 /* ── Reveal animation ── */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
@@ -341,12 +287,9 @@ code {
 
 /* ── Responsive ── */
 @media (max-width: 960px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
-    .hero-mock { max-width: 520px; }
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
     .steps { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
-    .cron-grid { grid-template-columns: 1fr; }
     .install-grid { grid-template-columns: 1fr; }
     .check-list { grid-template-columns: 1fr; }
 }
@@ -362,8 +305,7 @@ code {
     .nav-links a { padding: 12px 24px; }
     .nav-cta { margin: 8px 24px; text-align: center; }
     .nav-toggle { display: block; }
-    .grid-4, .grid-3, .steps { grid-template-columns: 1fr; }
+    .grid-4, .grid-3, .steps, .shots { grid-template-columns: 1fr; }
     .hero { padding: 64px 0 80px; }
     .section { padding: 64px 0; }
-    .mock-window { transform: none; }
 }

@@ -21,7 +21,7 @@
             <a href="#how">How it works</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#scheduling">Scheduling</a>
-            <a href="#faq">FAQ</a>
+            <a href="https://github.com/danaki/wpezimport" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href="#install" class="nav-cta">Install</a>
         </nav>
         <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -42,35 +42,9 @@
             </p>
             <div class="hero-actions">
                 <a href="#install" class="btn btn-primary">Install wpezimport</a>
-                <a href="#how" class="btn btn-ghost">See how it works</a>
+                <a href="https://github.com/danaki/wpezimport" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </div>
             <p class="hero-note">Requires WordPress + WooCommerce · PHP 8.1+</p>
-        </div>
-
-        <!-- Decorative mock of the mapping UI (pure CSS, no screenshot needed) -->
-        <div class="hero-mock" aria-hidden="true">
-            <div class="mock-window">
-                <div class="mock-chrome">
-                    <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
-                    <span class="mock-title">wpezimport — Field Mapping</span>
-                </div>
-                <div class="mock-body">
-                    <div class="mock-col mock-target">
-                        <div class="mock-field"><span class="mock-label">Title</span><span class="mock-value">name</span></div>
-                        <div class="mock-field"><span class="mock-label">Regular price</span><span class="mock-value">price</span></div>
-                        <div class="mock-field"><span class="mock-label">Stock</span><span class="mock-value">quantity</span></div>
-                        <div class="mock-field"><span class="mock-label">Image 1</span><span class="mock-value">picture</span></div>
-                    </div>
-                    <div class="mock-col mock-source">
-                        <span class="mock-chip">name</span>
-                        <span class="mock-chip">price</span>
-                        <span class="mock-chip">quantity</span>
-                        <span class="mock-chip">picture</span>
-                        <span class="mock-chip">category</span>
-                        <span class="mock-chip">brand</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -172,34 +146,30 @@
         <h2 class="section-title">A look inside</h2>
         <p class="section-sub">The whole workflow happens in a clean admin UI inside wp-admin.</p>
 
-        <div class="grid grid-3 shots">
+        <div class="grid shots">
             <figure class="shot">
-                <img src="screenshots/manage-imports.svg" alt="Manage Imports screen — placeholder" loading="lazy">
-                <figcaption>Manage Imports — all saved profiles in one list</figcaption>
+                <a href="screenshots/new-import.jpg" target="_blank" rel="noopener noreferrer" aria-label="Open New Import screenshot">
+                    <img src="screenshots/new-import.jpg" alt="New Import screen with file upload, URL import and XML preview" loading="lazy">
+                </a>
+                <figcaption>New Import — upload a file or import from a URL</figcaption>
             </figure>
             <figure class="shot">
-                <img src="screenshots/upload.svg" alt="New Import upload screen — placeholder" loading="lazy">
-                <figcaption>New Import — upload a file or pull from a URL</figcaption>
+                <a href="screenshots/field-mapping.jpg" target="_blank" rel="noopener noreferrer" aria-label="Open field mapping screenshot">
+                    <img src="screenshots/field-mapping.jpg" alt="Field mapping screen with product fields and XML structure" loading="lazy">
+                </a>
+                <figcaption>Field mapping — map XML elements to product fields</figcaption>
             </figure>
             <figure class="shot">
-                <img src="screenshots/xml-select.svg" alt="XML item selection — placeholder" loading="lazy">
-                <figcaption>XML feeds — pick the repeating item element</figcaption>
+                <a href="screenshots/import-processing.jpg" target="_blank" rel="noopener noreferrer" aria-label="Open import processing screenshot">
+                    <img src="screenshots/import-processing.jpg" alt="Completed import showing progress and item results" loading="lazy">
+                </a>
+                <figcaption>Import processing — follow progress and results</figcaption>
             </figure>
             <figure class="shot">
-                <img src="screenshots/mapping.svg" alt="Field mapping screen — placeholder" loading="lazy">
-                <figcaption>Field mapping — drag elements onto product fields</figcaption>
-            </figure>
-            <figure class="shot">
-                <img src="screenshots/import-run.svg" alt="Import progress — placeholder" loading="lazy">
-                <figcaption>Import run — live progress and results</figcaption>
-            </figure>
-            <figure class="shot">
-                <img src="screenshots/scheduling.svg" alt="Scheduling options — placeholder" loading="lazy">
-                <figcaption>Scheduling — cron URLs, status and logs</figcaption>
-            </figure>
-            <figure class="shot">
-                <img src="screenshots/statistics.svg" alt="Import statistics — placeholder" loading="lazy">
-                <figcaption>Statistics — per-run created / updated / errors</figcaption>
+                <a href="screenshots/scheduling-safe.png" target="_blank" rel="noopener noreferrer" aria-label="Open scheduling screenshot">
+                    <img src="screenshots/scheduling-safe.png" alt="Scheduling options with current import status and progress" loading="lazy">
+                </a>
+                <figcaption>Scheduling — check status and progress</figcaption>
             </figure>
         </div>
     </div>
@@ -264,34 +234,6 @@
     </div>
 </section>
 
-<section class="section section-alt" id="faq">
-    <div class="container">
-        <h2 class="section-title">Questions, answered</h2>
-        <div class="faq-list">
-            <details>
-                <summary>Is wpezimport really free?</summary>
-                <p>Yes — free and open-source under GPL-2.0+. No Pro tier, no locked features, no license keys.</p>
-            </details>
-            <details>
-                <summary>Does it only work with WooCommerce?</summary>
-                <p>Yes. Imports target WooCommerce products, so WooCommerce must be active. The plugin shows a notice with an install shortcut if it isn’t.</p>
-            </details>
-            <details>
-                <summary>Will re-running an import create duplicates?</summary>
-                <p>No. You choose a unique identifier field (SKU, product code, ID…). Existing products are matched and updated — and the per-field “Update?” checkboxes control exactly which fields get overwritten.</p>
-            </details>
-            <details>
-                <summary>Can it handle large feeds?</summary>
-                <p>Yes. Imports run in batches bounded by your server’s execution-time limit, and scheduled imports resume where they stopped. Posts import first, then images.</p>
-            </details>
-            <details>
-                <summary>What feed formats are supported?</summary>
-                <p>CSV, XLS and XLSX via PhpSpreadsheet, plus XML feeds with a visual element picker and full XPath-pattern support for building field values.</p>
-            </details>
-        </div>
-    </div>
-</section>
-
 <footer class="footer">
     <div class="container footer-inner">
         <div>
@@ -302,6 +244,7 @@
             <p class="footer-tag">Easy product imports for WooCommerce.</p>
         </div>
         <div class="footer-meta">
+            <p><a href="https://github.com/danaki/wpezimport" target="_blank" rel="noopener noreferrer">GitHub</a></p>
             <p>Free &amp; open-source · GPL-2.0+</p>
             <p>Made by Yuri Pimenov</p>
         </div>
