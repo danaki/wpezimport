@@ -1,4 +1,4 @@
-=== EzImport for WooCommerce ===
+=== EzImport ===
 Tags: woocommerce, import, xml, csv, products
 Requires at least: 5.0
 Tested up to: 7.1
@@ -28,7 +28,7 @@ WooCommerce is required. For support and source code, visit https://github.com/d
 
 1. Install and activate WooCommerce.
 2. Upload the EzImport ZIP through Plugins > Add New > Upload Plugin, or install it from the WordPress plugin directory when available.
-3. Activate EzImport for WooCommerce.
+3. Activate EzImport.
 4. Open EzImport in the admin menu to create an import.
 
 == Frequently Asked Questions ==

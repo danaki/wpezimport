@@ -120,7 +120,7 @@ function wpezimport_handle_import() {
     } else {
         $inserted = $wpdb->insert($table, array(
             /* translators: %s: date and time of the manual import. */
-            'name'       => sprintf(__('Manual import %s', 'ezimport-for-woocommerce'), current_time('Y-m-d H:i:s')),
+            'name'       => sprintf(__('Manual import %s', 'ezimport'), current_time('Y-m-d H:i:s')),
             'type'       => 'file',
             'post_type'  => $post_type,
             'file_path'  => $file_path,
@@ -129,7 +129,7 @@ function wpezimport_handle_import() {
             'created_at' => current_time('mysql'),
         ), array('%s', '%s', '%s', '%s', '%d', '%s', '%s'));
         if (!$inserted) {
-            wp_send_json_error(array('message' => __('Failed to initialize import.', 'ezimport-for-woocommerce')));
+            wp_send_json_error(array('message' => __('Failed to initialize import.', 'ezimport')));
             return;
         }
         $saved_import_id = (int) $wpdb->insert_id;
@@ -148,7 +148,7 @@ function wpezimport_handle_import() {
                     'fields'     => array(),
                     'resolution' => array(
                         'status'  => 'skipped',
-                        'message' => __('No unique identifier field configured', 'ezimport-for-woocommerce'),
+                        'message' => __('No unique identifier field configured', 'ezimport'),
                         'title'   => $title !== '' ? $title : 'Item #' . ($i + 1),
                     ),
                     'id_resolution' => array('status' => 'not_configured', 'duplicate_found' => false, 'existing_post_id' => null),
@@ -550,7 +550,7 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
             if (!in_array($head_mime, $allowed_image_mimes)) {
                 wpezimport_debug_log('Image HEAD rejected (MIME): ' . $head_mime . ' - ' . $image_url);
                 /* translators: %s: MIME type reported by the image server. */
-                return new WP_Error('bad_mime', sprintf(__('Rejected: server reports non-image type (%s)', 'ezimport-for-woocommerce'), $head_mime));
+                return new WP_Error('bad_mime', sprintf(__('Rejected: server reports non-image type (%s)', 'ezimport'), $head_mime));
             }
         }
 
@@ -560,7 +560,7 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
             $limit_mb = round($max_image_size / (1024 * 1024), 1);
             wpezimport_debug_log('Image HEAD rejected (size): ' . $head_content_length . ' bytes - ' . $image_url);
             /* translators: 1: image size in MB, 2: allowed size in MB. */
-            return new WP_Error('too_large', sprintf(__('Rejected: file too large (%1$s MB, limit %2$s MB)', 'ezimport-for-woocommerce'), $size_mb, $limit_mb));
+            return new WP_Error('too_large', sprintf(__('Rejected: file too large (%1$s MB, limit %2$s MB)', 'ezimport'), $size_mb, $limit_mb));
         }
     }
     // If HEAD fails, proceed to GET anyway (some servers don't support HEAD)
@@ -589,7 +589,7 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
         $limit_mb = round($max_image_size / (1024 * 1024), 1);
         wpezimport_debug_log('Image rejected (download size): ' . strlen($image_data) . ' bytes - ' . $image_url);
         /* translators: 1: downloaded image size in MB, 2: allowed size in MB. */
-        return new WP_Error('too_large', sprintf(__('Rejected: downloaded file too large (%1$s MB, limit %2$s MB)', 'ezimport-for-woocommerce'), $size_mb, $limit_mb));
+        return new WP_Error('too_large', sprintf(__('Rejected: downloaded file too large (%1$s MB, limit %2$s MB)', 'ezimport'), $size_mb, $limit_mb));
     }
 
     return array('data' => $image_data, 'response' => $response, 'code' => $response_code);
@@ -828,7 +828,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'cached',
-                'message' => __('Already attached to this post', 'ezimport-for-woocommerce'),
+                'message' => __('Already attached to this post', 'ezimport'),
                 'attachment_id' => $existing_attach_id
             );
 
@@ -891,8 +891,8 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
         if (empty($extension)) {
             $error_msg = sprintf(
                 /* translators: %s: detected MIME type of the rejected image. */
-                __('Rejected: not a recognized image type (detected: %s)', 'ezimport-for-woocommerce'),
-                $detected_mime ?: __('unknown', 'ezimport-for-woocommerce')
+                __('Rejected: not a recognized image type (detected: %s)', 'ezimport'),
+                $detected_mime ?: __('unknown', 'ezimport')
             );
             $errors[] = $error_msg . ' - ' . $image_url;
             wpezimport_debug_log('Image rejected (not an image): detected=' . $detected_mime . ' - ' . $image_url);
@@ -922,7 +922,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'error',
-                'message' => __('Failed to save file to disk', 'ezimport-for-woocommerce')
+                'message' => __('Failed to save file to disk', 'ezimport')
             );
             continue;
         }
@@ -949,7 +949,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'error',
-                'message' => __('Failed to create attachment: ', 'ezimport-for-woocommerce') . $error_msg
+                'message' => __('Failed to create attachment: ', 'ezimport') . $error_msg
             );
             continue;
         }
@@ -992,7 +992,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'cached',
-                'message' => __('Copied from existing attachment', 'ezimport-for-woocommerce'),
+                'message' => __('Copied from existing attachment', 'ezimport'),
                 'attachment_id' => $attach_id
             );
         }

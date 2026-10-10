@@ -18,11 +18,11 @@ $import_id = isset($_GET['import_id']) ? intval($_GET['import_id']) : 0;
 $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
 ?>
 <div class="wrap wpezimport-admin-wrap">
-    <h1 class="wp-heading-inline"><?php esc_html_e('Import Processing', 'ezimport-for-woocommerce'); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e('Import Processing', 'ezimport'); ?></h1>
 
     <?php if (!$import): ?>
         <div class="notice notice-error">
-            <p><?php esc_html_e('Import not found. Please start again from the Manage Imports page.', 'ezimport-for-woocommerce'); ?></p>
+            <p><?php esc_html_e('Import not found. Please start again from the Manage Imports page.', 'ezimport'); ?></p>
         </div>
     <?php else: ?>
         <div class="wpezimport-results-box">
@@ -36,33 +36,33 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
                 </div>
                 <div id="wpezimport-progress-status" style="margin:12px 0;">
                     <span class="spinner is-active" style="float:none;margin:0 8px 0 0;"></span>
-                    <span id="wpezimport-status-text"><?php esc_html_e('Starting import...', 'ezimport-for-woocommerce'); ?></span>
+                    <span id="wpezimport-status-text"><?php esc_html_e('Starting import...', 'ezimport'); ?></span>
                 </div>
                 <div class="wpezimport-stats-grid" id="wpezimport-live-stats" style="margin-top:16px;">
                     <div class="wpezimport-stat-box created">
                         <span class="dashicons dashicons-plus-alt"></span>
                         <div class="stat-number" id="stat-created">0</div>
-                        <div class="stat-label"><?php esc_html_e('Created', 'ezimport-for-woocommerce'); ?></div>
+                        <div class="stat-label"><?php esc_html_e('Created', 'ezimport'); ?></div>
                     </div>
                     <div class="wpezimport-stat-box stat-updated">
                         <span class="dashicons dashicons-update"></span>
                         <div class="stat-number" id="stat-updated">0</div>
-                        <div class="stat-label"><?php esc_html_e('Updated', 'ezimport-for-woocommerce'); ?></div>
+                        <div class="stat-label"><?php esc_html_e('Updated', 'ezimport'); ?></div>
                     </div>
                     <div class="wpezimport-stat-box errors">
                         <span class="dashicons dashicons-warning"></span>
                         <div class="stat-number" id="stat-errors">0</div>
-                        <div class="stat-label"><?php esc_html_e('Errors', 'ezimport-for-woocommerce'); ?></div>
+                        <div class="stat-label"><?php esc_html_e('Errors', 'ezimport'); ?></div>
                     </div>
                     <div class="wpezimport-stat-box no_change">
                         <span class="dashicons dashicons-yes"></span>
                         <div class="stat-number" id="stat-nochange">0</div>
-                        <div class="stat-label"><?php esc_html_e('No Change', 'ezimport-for-woocommerce'); ?></div>
+                        <div class="stat-label"><?php esc_html_e('No Change', 'ezimport'); ?></div>
                     </div>
                     <div class="wpezimport-stat-box skipped">
                         <span class="dashicons dashicons-dismiss"></span>
                         <div class="stat-number" id="stat-skipped">0</div>
-                        <div class="stat-label"><?php esc_html_e('Skipped', 'ezimport-for-woocommerce'); ?></div>
+                        <div class="stat-label"><?php esc_html_e('Skipped', 'ezimport'); ?></div>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
             <!-- Results section — populated after completion -->
             <div id="wpezimport-results-section" style="display:none;">
                 <div class="notice notice-success" id="wpezimport-complete-notice" style="display:none;">
-                    <p><strong><?php esc_html_e('Import complete!', 'ezimport-for-woocommerce'); ?></strong> <span id="wpezimport-complete-summary"></span></p>
+                    <p><strong><?php esc_html_e('Import complete!', 'ezimport'); ?></strong> <span id="wpezimport-complete-summary"></span></p>
                 </div>
                 <div class="notice notice-error" id="wpezimport-error-notice" style="display:none;">
                     <p id="wpezimport-error-text"></p>
@@ -79,8 +79,8 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
             </div>
 
             <p class="submit" id="wpezimport-actions" style="display:none;">
-                <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button button-primary"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button"><?php esc_html_e('Run Again', 'ezimport-for-woocommerce'); ?></a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button button-primary"><?php esc_html_e('Back to Manage Imports', 'ezimport'); ?></a>
+                <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button"><?php esc_html_e('Run Again', 'ezimport'); ?></a>
             </p>
         </div>
 
@@ -123,13 +123,13 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
 
             function showComplete(data) {
                 $('#wpezimport-progress-section .spinner').removeClass('is-active');
-                setStatus('<?php echo esc_js(__('Complete', 'ezimport-for-woocommerce')); ?>');
+                setStatus('<?php echo esc_js(__('Complete', 'ezimport')); ?>');
 
-                var summary = '<?php echo esc_js(__('Created', 'ezimport-for-woocommerce')); ?>: ' + totals.created +
-                    ', <?php echo esc_js(__('Updated', 'ezimport-for-woocommerce')); ?>: ' + totals.updated +
-                    ', <?php echo esc_js(__('Errors', 'ezimport-for-woocommerce')); ?>: ' + totals.errors;
-                if (totals.no_change > 0) summary += ', <?php echo esc_js(__('No Change', 'ezimport-for-woocommerce')); ?>: ' + totals.no_change;
-                if (totals.skipped > 0)   summary += ', <?php echo esc_js(__('Skipped', 'ezimport-for-woocommerce')); ?>: ' + totals.skipped;
+                var summary = '<?php echo esc_js(__('Created', 'ezimport')); ?>: ' + totals.created +
+                    ', <?php echo esc_js(__('Updated', 'ezimport')); ?>: ' + totals.updated +
+                    ', <?php echo esc_js(__('Errors', 'ezimport')); ?>: ' + totals.errors;
+                if (totals.no_change > 0) summary += ', <?php echo esc_js(__('No Change', 'ezimport')); ?>: ' + totals.no_change;
+                if (totals.skipped > 0)   summary += ', <?php echo esc_js(__('Skipped', 'ezimport')); ?>: ' + totals.skipped;
 
                 $('#wpezimport-complete-summary').text(summary);
                 $('#wpezimport-complete-notice').show();
@@ -141,7 +141,7 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
 
             function showError(msg) {
                 $('#wpezimport-progress-section .spinner').removeClass('is-active');
-                setStatus('<?php echo esc_js(__('Error', 'ezimport-for-woocommerce')); ?>');
+                setStatus('<?php echo esc_js(__('Error', 'ezimport')); ?>');
                 $('#wpezimport-error-text').text(msg);
                 $('#wpezimport-error-notice').show();
                 $('#wpezimport-results-section').show();
@@ -152,15 +152,15 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
             function renderResolvedItems() {
                 if (!allResolved.length) return;
                 var $container = $('#wpezimport-resolved-items');
-                $container.append('<h3><?php echo esc_js(__('Item Resolution Details', 'ezimport-for-woocommerce')); ?></h3>');
-                $container.append('<p class="description"><?php echo esc_js(__('Click on each item to expand and see field details.', 'ezimport-for-woocommerce')); ?></p>');
+                $container.append('<h3><?php echo esc_js(__('Item Resolution Details', 'ezimport')); ?></h3>');
+                $container.append('<p class="description"><?php echo esc_js(__('Click on each item to expand and see field details.', 'ezimport')); ?></p>');
 
                 var statusLabels = {
-                    'created':   '<?php echo esc_js(__('Created', 'ezimport-for-woocommerce')); ?>',
-                    'updated':   '<?php echo esc_js(__('Updated', 'ezimport-for-woocommerce')); ?>',
-                    'no_change': '<?php echo esc_js(__('No Change', 'ezimport-for-woocommerce')); ?>',
-                    'skipped':   '<?php echo esc_js(__('Skipped', 'ezimport-for-woocommerce')); ?>',
-                    'error':     '<?php echo esc_js(__('Error', 'ezimport-for-woocommerce')); ?>'
+                    'created':   '<?php echo esc_js(__('Created', 'ezimport')); ?>',
+                    'updated':   '<?php echo esc_js(__('Updated', 'ezimport')); ?>',
+                    'no_change': '<?php echo esc_js(__('No Change', 'ezimport')); ?>',
+                    'skipped':   '<?php echo esc_js(__('Skipped', 'ezimport')); ?>',
+                    'error':     '<?php echo esc_js(__('Error', 'ezimport')); ?>'
                 };
 
                 $.each(allResolved, function(idx, item) {
@@ -181,25 +181,25 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
 
                     // ID resolution
                     var idRes = item.id_resolution || {};
-                    html += '<div class="wpezimport-id-resolution"><h4><?php echo esc_js(__('ID Resolution', 'ezimport-for-woocommerce')); ?></h4>';
+                    html += '<div class="wpezimport-id-resolution"><h4><?php echo esc_js(__('ID Resolution', 'ezimport')); ?></h4>';
                     html += '<table class="wpezimport-id-table">';
-                    html += '<tr><th><?php echo esc_js(__('XPath Pattern:', 'ezimport-for-woocommerce')); ?></th><td><code>' + $('<span>').text(idRes.xpath || '').html() + '</code></td></tr>';
-                    html += '<tr><th><?php echo esc_js(__('Extracted Value:', 'ezimport-for-woocommerce')); ?></th><td><strong>' + $('<span>').text(idRes.extracted_value || '(empty)').html() + '</strong></td></tr>';
+                    html += '<tr><th><?php echo esc_js(__('XPath Pattern:', 'ezimport')); ?></th><td><code>' + $('<span>').text(idRes.xpath || '').html() + '</code></td></tr>';
+                    html += '<tr><th><?php echo esc_js(__('Extracted Value:', 'ezimport')); ?></th><td><strong>' + $('<span>').text(idRes.extracted_value || '(empty)').html() + '</strong></td></tr>';
                     html += '</table></div>';
 
                     // Result info
                     html += '<div class="wpezimport-resolution-info">';
-                    if (res.post_id) html += '<strong><?php echo esc_js(__('Post ID:', 'ezimport-for-woocommerce')); ?></strong> ' + res.post_id + ' | ';
-                    html += '<strong><?php echo esc_js(__('Action:', 'ezimport-for-woocommerce')); ?></strong> ' + label;
-                    if (res.message) html += '<br><strong><?php echo esc_js(__('Message:', 'ezimport-for-woocommerce')); ?></strong> ' + $('<span>').text(res.message).html();
+                    if (res.post_id) html += '<strong><?php echo esc_js(__('Post ID:', 'ezimport')); ?></strong> ' + res.post_id + ' | ';
+                    html += '<strong><?php echo esc_js(__('Action:', 'ezimport')); ?></strong> ' + label;
+                    if (res.message) html += '<br><strong><?php echo esc_js(__('Message:', 'ezimport')); ?></strong> ' + $('<span>').text(res.message).html();
                     html += '</div>';
 
                     // Fields table
                     if (Object.keys(fields).length > 0) {
                         html += '<table class="wpezimport-field-table ' + (showOld ? 'has-old-value' : '') + '">';
-                        html += '<thead><tr><th><?php echo esc_js(__('Field', 'ezimport-for-woocommerce')); ?></th>';
-                        if (showOld) html += '<th><?php echo esc_js(__('Old Value', 'ezimport-for-woocommerce')); ?></th>';
-                        html += '<th><?php echo esc_js(__('Value', 'ezimport-for-woocommerce')); ?></th></tr></thead><tbody>';
+                        html += '<thead><tr><th><?php echo esc_js(__('Field', 'ezimport')); ?></th>';
+                        if (showOld) html += '<th><?php echo esc_js(__('Old Value', 'ezimport')); ?></th>';
+                        html += '<th><?php echo esc_js(__('Value', 'ezimport')); ?></th></tr></thead><tbody>';
                         $.each(fields, function(fk, fd) {
                             var changed = fd.changed !== undefined ? fd.changed : true;
                             html += '<tr class="' + (changed ? 'changed-row' : 'no-change-row') + '">';
@@ -219,11 +219,11 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
                     // Image statuses
                     var imgStatuses = item.image_statuses || [];
                     if (imgStatuses.length > 0) {
-                        html += '<div class="wpezimport-image-statuses"><h4><?php echo esc_js(__('Image Processing', 'ezimport-for-woocommerce')); ?></h4>';
+                        html += '<div class="wpezimport-image-statuses"><h4><?php echo esc_js(__('Image Processing', 'ezimport')); ?></h4>';
                         html += '<table class="wpezimport-image-table"><thead><tr>';
-                        html += '<th><?php echo esc_js(__('URL', 'ezimport-for-woocommerce')); ?></th>';
-                        html += '<th><?php echo esc_js(__('Status', 'ezimport-for-woocommerce')); ?></th>';
-                        html += '<th><?php echo esc_js(__('Details', 'ezimport-for-woocommerce')); ?></th></tr></thead><tbody>';
+                        html += '<th><?php echo esc_js(__('URL', 'ezimport')); ?></th>';
+                        html += '<th><?php echo esc_js(__('Status', 'ezimport')); ?></th>';
+                        html += '<th><?php echo esc_js(__('Details', 'ezimport')); ?></th></tr></thead><tbody>';
                         $.each(imgStatuses, function(ii, is_) {
                             var imgUrl  = is_.url || '';
                             var imgStat = is_.status || 'unknown';
@@ -245,7 +245,7 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
 
             // ── Step 1: Trigger the import ──
             function triggerImport() {
-                setStatus('<?php echo esc_js(__('Triggering import (fetching data)...', 'ezimport-for-woocommerce')); ?>');
+                setStatus('<?php echo esc_js(__('Triggering import (fetching data)...', 'ezimport')); ?>');
 
                 $.post(ajaxUrl, {
                     action:    'wpezimport_trigger_import',
@@ -253,13 +253,13 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
                     nonce:     batchNonce
                 }, function(response) {
                     if (response.success) {
-                        setStatus('<?php echo esc_js(__('Processing items...', 'ezimport-for-woocommerce')); ?>');
+                        setStatus('<?php echo esc_js(__('Processing items...', 'ezimport')); ?>');
                         processBatch();
                     } else {
-                        showError(response.data ? response.data.message : '<?php echo esc_js(__('Failed to trigger import.', 'ezimport-for-woocommerce')); ?>');
+                        showError(response.data ? response.data.message : '<?php echo esc_js(__('Failed to trigger import.', 'ezimport')); ?>');
                     }
                 }).fail(function(xhr) {
-                    showError('<?php echo esc_js(__('AJAX request failed.', 'ezimport-for-woocommerce')); ?> (' + xhr.status + ')');
+                    showError('<?php echo esc_js(__('AJAX request failed.', 'ezimport')); ?> (' + xhr.status + ')');
                 });
             }
 
@@ -271,7 +271,7 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
                     nonce:     batchNonce
                 }, function(response) {
                     if (!response.success) {
-                        showError(response.data ? response.data.message : '<?php echo esc_js(__('Batch processing failed.', 'ezimport-for-woocommerce')); ?>');
+                        showError(response.data ? response.data.message : '<?php echo esc_js(__('Batch processing failed.', 'ezimport')); ?>');
                         return;
                     }
 
@@ -293,13 +293,13 @@ $import = ($import_id > 0) ? wpezimport_get_import($import_id) : null;
                         showComplete(d);
                     } else if (d.status === 'processing') {
                         // More items to do — continue
-                        setStatus('<?php echo esc_js(__('Processing items...', 'ezimport-for-woocommerce')); ?> ' + (d.last_item || 0) + '/' + (d.total || '?'));
+                        setStatus('<?php echo esc_js(__('Processing items...', 'ezimport')); ?> ' + (d.last_item || 0) + '/' + (d.total || '?'));
                         processBatch();
                     } else {
-                        showError('<?php echo esc_js(__('Unexpected status: ', 'ezimport-for-woocommerce')); ?>' + d.status);
+                        showError('<?php echo esc_js(__('Unexpected status: ', 'ezimport')); ?>' + d.status);
                     }
                 }).fail(function(xhr) {
-                    showError('<?php echo esc_js(__('AJAX request failed.', 'ezimport-for-woocommerce')); ?> (' + xhr.status + ')');
+                    showError('<?php echo esc_js(__('AJAX request failed.', 'ezimport')); ?> (' + xhr.status + ')');
                 });
             }
 

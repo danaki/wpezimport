@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: EzImport for WooCommerce
+ * Plugin Name: EzImport
  * Plugin URI: https://wpezimport.com
  * Description: Import WooCommerce products from CSV, XLS, XLSX, or XML files and URLs with field mapping and scheduled updates.
  * Version: 1.0.0
@@ -8,7 +8,7 @@
  * Requires PHP: 8.1
  * Requires Plugins: woocommerce
  * Author: Yuri Pimenov
- * Text Domain: ezimport-for-woocommerce
+ * Text Domain: ezimport
  * License: GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -47,17 +47,17 @@ function wpezimport_woocommerce_dependency_notice() {
         ?>
         <div class="notice notice-error is-dismissible">
             <p>
-                <strong><?php esc_html_e('EzImport', 'ezimport-for-woocommerce'); ?>:</strong>
-                <?php esc_html_e('This plugin requires WooCommerce to be installed and activated. Please install and activate WooCommerce to use EzImport.', 'ezimport-for-woocommerce'); ?>
+                <strong><?php esc_html_e('EzImport', 'ezimport'); ?>:</strong>
+                <?php esc_html_e('This plugin requires WooCommerce to be installed and activated. Please install and activate WooCommerce to use EzImport.', 'ezimport'); ?>
             </p>
             <?php if (current_user_can('install_plugins')): ?>
                 <p>
                     <a href="<?php echo esc_url(admin_url('plugin-install.php?s=woocommerce&tab=search&type=term')); ?>" class="button button-primary">
-                        <?php esc_html_e('Install WooCommerce', 'ezimport-for-woocommerce'); ?>
+                        <?php esc_html_e('Install WooCommerce', 'ezimport'); ?>
                     </a>
                     <?php if (file_exists(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php')): ?>
                         <a href="<?php echo esc_url(wp_nonce_url(admin_url('plugins.php?action=activate&plugin=woocommerce/woocommerce.php'), 'activate-plugin_woocommerce/woocommerce.php')); ?>" class="button">
-                            <?php esc_html_e('Activate WooCommerce', 'ezimport-for-woocommerce'); ?>
+                            <?php esc_html_e('Activate WooCommerce', 'ezimport'); ?>
                         </a>
                     <?php endif; ?>
                 </p>
@@ -79,8 +79,8 @@ function wpezimport_add_admin_menu() {
 
     // Add main menu item with Manage Imports as default
     add_menu_page(
-        __('EzImport for WooCommerce', 'ezimport-for-woocommerce'),
-        __('EzImport', 'ezimport-for-woocommerce'),
+        __('EzImport', 'ezimport'),
+        __('EzImport', 'ezimport'),
         'manage_options',
         'wpezimport-manage',
         'wpezimport_display_manage_imports_page', // Default to Manage Imports
@@ -91,8 +91,8 @@ function wpezimport_add_admin_menu() {
     // Add submenu items
     add_submenu_page(
         'wpezimport-manage',                 // Parent slug
-        __('Manage Imports', 'ezimport-for-woocommerce'), // Page title
-        __('Manage Imports', 'ezimport-for-woocommerce'), // Menu title
+        __('Manage Imports', 'ezimport'), // Page title
+        __('Manage Imports', 'ezimport'), // Menu title
         'manage_options',                    // Capability
         'wpezimport-manage',                 // Menu slug (same as parent for first item)
         'wpezimport_display_manage_imports_page'    // Function
@@ -100,8 +100,8 @@ function wpezimport_add_admin_menu() {
 
     add_submenu_page(
         'wpezimport-manage',                 // Parent slug
-        __('New Import', 'ezimport-for-woocommerce'),     // Page title
-        __('New Import', 'ezimport-for-woocommerce'),     // Menu title
+        __('New Import', 'ezimport'),     // Page title
+        __('New Import', 'ezimport'),     // Menu title
         'manage_options',                    // Capability
         'wpezimport-new',                    // Menu slug (unique for new page)
         'wpezimport_display_admin_page'             // Function
@@ -112,10 +112,10 @@ function wpezimport_add_admin_menu() {
     // action so that admin-header.php receives a string (not null) for
     // strip_tags(), avoiding a PHP 8.1+ deprecation notice.
     $hidden_pages = array(
-        'wpezimport-confirm'    => array(__('Confirm Import', 'ezimport-for-woocommerce'),    'wpezimport_display_confirm_page'),
-        'wpezimport-process'    => array(__('Process Import', 'ezimport-for-woocommerce'),    'wpezimport_display_process_page'),
-        'wpezimport-statistics' => array(__('Import Statistics', 'ezimport-for-woocommerce'), 'wpezimport_display_statistics_page'),
-        'wpezimport-schedule'   => array(__('Scheduling Options', 'ezimport-for-woocommerce'), 'wpezimport_display_schedule_page'),
+        'wpezimport-confirm'    => array(__('Confirm Import', 'ezimport'),    'wpezimport_display_confirm_page'),
+        'wpezimport-process'    => array(__('Process Import', 'ezimport'),    'wpezimport_display_process_page'),
+        'wpezimport-statistics' => array(__('Import Statistics', 'ezimport'), 'wpezimport_display_statistics_page'),
+        'wpezimport-schedule'   => array(__('Scheduling Options', 'ezimport'), 'wpezimport_display_schedule_page'),
     );
 
     // Hidden pages use null parent so they don't appear in menu but are still accessible
@@ -137,7 +137,7 @@ add_action('admin_menu', 'wpezimport_add_admin_menu');
  */
 function wpezimport_enqueue_admin_scripts($hook) {
     // Only load on plugin pages
-    if (strpos((string)$hook, 'ezimport-for-woocommerce') === false) { // Cast to string inline to avoid null issues
+    if (strpos((string)$hook, 'wpezimport-') === false) { // Cast to string inline to avoid null issues
         return;
     }
 
@@ -169,34 +169,34 @@ function wpezimport_enqueue_admin_scripts($hook) {
         'plugin_url' => WPEZIMPORT_PLUGIN_URL,
         'post_types' => $post_type_options, // Format: { slug: label, ... }
         'strings' => [ // Renamed from 'text' to 'strings'
-            'confirm_delete_mapping' => __('Are you sure you want to delete this mapping configuration?', 'ezimport-for-woocommerce'),
-            'config_saved' => __('Mapping configuration saved successfully!', 'ezimport-for-woocommerce'), // Renamed from mapping_saved_success
-            'error_saving_config' => __('Error saving mapping configuration.', 'ezimport-for-woocommerce'), // Renamed from mapping_saved_error
-            'field_required' => __('This field is required.', 'ezimport-for-woocommerce'),
-            'unique_id_required' => __('A unique ID field must be selected for updates.', 'ezimport-for-woocommerce'),
-            'confirm_leave_page' => __('You have unsaved changes. Are you sure you want to leave this page?', 'ezimport-for-woocommerce'),
-            'run_import_confirm' => __('Are you sure you want to run this import? This action cannot be undone.', 'ezimport-for-woocommerce'),
-            'running_import' => __('Running import, please wait...', 'ezimport-for-woocommerce'),
-            'import_complete' => __('Import complete!', 'ezimport-for-woocommerce'),
-            'import_error' => __('An error occurred during the import.', 'ezimport-for-woocommerce'),
-            'view_log_details' => __('View log details', 'ezimport-for-woocommerce'),
-            'sample_navigation_error' => __('Error navigating XML samples.', 'ezimport-for-woocommerce'),
+            'confirm_delete_mapping' => __('Are you sure you want to delete this mapping configuration?', 'ezimport'),
+            'config_saved' => __('Mapping configuration saved successfully!', 'ezimport'), // Renamed from mapping_saved_success
+            'error_saving_config' => __('Error saving mapping configuration.', 'ezimport'), // Renamed from mapping_saved_error
+            'field_required' => __('This field is required.', 'ezimport'),
+            'unique_id_required' => __('A unique ID field must be selected for updates.', 'ezimport'),
+            'confirm_leave_page' => __('You have unsaved changes. Are you sure you want to leave this page?', 'ezimport'),
+            'run_import_confirm' => __('Are you sure you want to run this import? This action cannot be undone.', 'ezimport'),
+            'running_import' => __('Running import, please wait...', 'ezimport'),
+            'import_complete' => __('Import complete!', 'ezimport'),
+            'import_error' => __('An error occurred during the import.', 'ezimport'),
+            'view_log_details' => __('View log details', 'ezimport'),
+            'sample_navigation_error' => __('Error navigating XML samples.', 'ezimport'),
             // New strings for XML Selection UI
-            'select_post_type' => __('Select Post Type:', 'ezimport-for-woocommerce'),
-            'choose_post_type' => __('-- Choose Post Type --', 'ezimport-for-woocommerce'),
-            'confirm_selection' => __('Confirm Selection and Proceed to Mapping', 'ezimport-for-woocommerce'),
-            'alert_select_xml_element' => __('Please select an XML element from the tree.', 'ezimport-for-woocommerce'),
-            'alert_select_post_type' => __('Please select a post type.', 'ezimport-for-woocommerce'),
-            'processing' => __('Processing...', 'ezimport-for-woocommerce'),
-            'saving' => __('Saving...', 'ezimport-for-woocommerce'), // Added for save button text
-            'success_proceed_manually' => __('Selection successful. Proceed to mapping (URL missing).', 'ezimport-for-woocommerce'),
-            'error_finalizing' => __('Error finalizing selection: ', 'ezimport-for-woocommerce'),
-            'ajax_error' => __('AJAX error: ', 'ezimport-for-woocommerce'), // Renamed from error_ajax
-            'xpath_evaluation_error' => __('Error evaluating XPath expression.', 'ezimport-for-woocommerce'),
-            'evaluate_xpath_button' => __('Evaluate XPath', 'ezimport-for-woocommerce'),
-            'clear_value_button' => __('Clear Value', 'ezimport-for-woocommerce'),
-            'refreshing' => __('Refreshing...', 'ezimport-for-woocommerce'),
-            'refresh_preview' => __('Refresh Preview', 'ezimport-for-woocommerce')
+            'select_post_type' => __('Select Post Type:', 'ezimport'),
+            'choose_post_type' => __('-- Choose Post Type --', 'ezimport'),
+            'confirm_selection' => __('Confirm Selection and Proceed to Mapping', 'ezimport'),
+            'alert_select_xml_element' => __('Please select an XML element from the tree.', 'ezimport'),
+            'alert_select_post_type' => __('Please select a post type.', 'ezimport'),
+            'processing' => __('Processing...', 'ezimport'),
+            'saving' => __('Saving...', 'ezimport'), // Added for save button text
+            'success_proceed_manually' => __('Selection successful. Proceed to mapping (URL missing).', 'ezimport'),
+            'error_finalizing' => __('Error finalizing selection: ', 'ezimport'),
+            'ajax_error' => __('AJAX error: ', 'ezimport'), // Renamed from error_ajax
+            'xpath_evaluation_error' => __('Error evaluating XPath expression.', 'ezimport'),
+            'evaluate_xpath_button' => __('Evaluate XPath', 'ezimport'),
+            'clear_value_button' => __('Clear Value', 'ezimport'),
+            'refreshing' => __('Refreshing...', 'ezimport'),
+            'refresh_preview' => __('Refresh Preview', 'ezimport')
         ],
         'default_tab' => isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'file-upload',
         'version' => WPEZIMPORT_PLUGIN_VERSION,
@@ -210,7 +210,7 @@ add_action('admin_enqueue_scripts', 'wpezimport_enqueue_admin_scripts');
  */
 add_action('admin_enqueue_scripts', function($hook) {
     // Only load on your plugin's admin page
-    if (isset($_GET['page']) && strpos($_GET['page'], 'ezimport-for-woocommerce') === 0) {
+    if (isset($_GET['page']) && strpos(sanitize_key(wp_unslash($_GET['page'])), 'wpezimport-') === 0) {
         // Check if WooCommerce is active and the stylesheet exists
         if (class_exists('WooCommerce')) {
             // Path to the admin CSS file
@@ -265,7 +265,7 @@ function wpezimport_handle_manage_actions() {
     }
 
     if (!current_user_can('manage_options')) {
-        wp_die(esc_html__('You do not have permission to perform this action.', 'ezimport-for-woocommerce'));
+        wp_die(esc_html__('You do not have permission to perform this action.', 'ezimport'));
     }
 
     global $wpdb;

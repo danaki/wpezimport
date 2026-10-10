@@ -63,7 +63,7 @@ function wpezimport_navigate_xml_sample() {
 
     // Prepare the sample counter
     /* translators: 1: current sample number, 2: total number of samples. */
-    $sample_counter_html = '<span class="wpezimport-product-counter">' . sprintf(__('Sample %1$d of %2$d', 'ezimport-for-woocommerce'), $new_index + 1, count($samples)) . '</span>';
+    $sample_counter_html = '<span class="wpezimport-product-counter">' . sprintf(__('Sample %1$d of %2$d', 'ezimport'), $new_index + 1, count($samples)) . '</span>';
 
     // Process the XML for display
     $item_xpath = isset($draft->state['xml_item_path']) ? $draft->state['xml_item_path'] : '';
@@ -79,7 +79,7 @@ function wpezimport_navigate_xml_sample() {
         'has_prev' => $new_index > 0,
         'has_next' => $new_index < count($samples) - 1,
         /* translators: 1: current sample number, 2: total number of samples. */
-        'counter_text' => sprintf(__('Sample %1$d of %2$d', 'ezimport-for-woocommerce'), $new_index + 1, count($samples)),
+        'counter_text' => sprintf(__('Sample %1$d of %2$d', 'ezimport'), $new_index + 1, count($samples)),
         'sample_counter_html' => $sample_counter_html
     );
 

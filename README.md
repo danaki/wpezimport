@@ -1,4 +1,4 @@
-# EzImport for WooCommerce
+# EzImport
 
 A free WordPress plugin that imports WooCommerce products from Excel files (CSV, XLS, XLSX) or XML feeds — via file upload or a remote URL — with drag-and-drop field mapping, automatic image importing and cron-based scheduled updates.
 
@@ -31,14 +31,14 @@ A free WordPress plugin that imports WooCommerce products from Excel files (CSV,
 
 1. Install the release ZIP through **Plugins → Add New → Upload Plugin**, or extract it into `wp-content/plugins/`.
 2. Install and activate WooCommerce.
-3. Activate wpezimport under **Plugins → Installed Plugins**.
+3. Activate EzImport under **Plugins → Installed Plugins**.
 4. Open **EzImport** in the WordPress admin menu and create your first import.
 
 The GitHub source checkout omits `vendor/`. Run `composer install --no-dev` in a source checkout before activating it; the release ZIP includes the production dependencies.
 
 ## Building a directory release
 
-On Windows, run `./tools/build-release.ps1` from this repository. It creates `dist/ezimport-for-woocommerce-1.0.0.zip` with production dependencies and excludes tests and development packages. The directory release uses the WordPress.org slug `ezimport-for-woocommerce`; the source repository and internal function prefix retain `wpezimport`.
+On Windows, run `./tools/build-release.ps1` from this repository. It creates `dist/ezimport-1.0.0.zip` with production dependencies and excludes tests and development packages. The directory release uses the WordPress.org slug `ezimport`; the source repository and internal function prefix retain `wpezimport`.
 
 ## Usage
 

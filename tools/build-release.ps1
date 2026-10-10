@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $distRoot = Join-Path $projectRoot 'dist'
-$releaseSlug = 'ezimport-for-woocommerce'
+$releaseSlug = 'ezimport'
 $releaseVersion = '1.0.0'
 $stageRoot = Join-Path $distRoot ('stage-' + [guid]::NewGuid().ToString('N'))
 $pluginRoot = Join-Path $stageRoot $releaseSlug

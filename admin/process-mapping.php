@@ -128,7 +128,7 @@ function wpezimport_handle_mapping_submit() {
         ? sanitize_text_field($_POST['import_name'])
         : sprintf(
             /* translators: %s: date and time of the import. */
-            __('Import %s', 'ezimport-for-woocommerce'),
+            __('Import %s', 'ezimport'),
             current_time('Y-m-d H:i:s')
         );
 
@@ -195,14 +195,14 @@ function wpezimport_handle_mapping_submit() {
 
         // Redirect to the manage imports page with success message
         wp_send_json_success(array(
-            'message' => __('Import configuration saved successfully.', 'ezimport-for-woocommerce'),
+            'message' => __('Import configuration saved successfully.', 'ezimport'),
             'redirect' => admin_url('admin.php?page=wpezimport-manage')
         ));
     } else {
         wpezimport_debug_log('WPEZIMPORT SAVE - FAILED');
         // If database insert failed, show an error
         wp_send_json_error(array(
-            'message' => __('Failed to save import configuration: ', 'ezimport-for-woocommerce') . $wpdb->last_error
+            'message' => __('Failed to save import configuration: ', 'ezimport') . $wpdb->last_error
         ));
     }
 }
