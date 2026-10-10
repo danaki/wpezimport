@@ -23,7 +23,7 @@ function wpezimport_create_draft( array $data = array() ) {
     $table = $wpdb->prefix . 'wpezimport_imports';
 
     $row = array(
-        'name'     => isset( $data['name'] ) ? sanitize_text_field( $data['name'] ) : __( 'Draft Import', 'wpezimport' ),
+        'name'     => isset( $data['name'] ) ? sanitize_text_field( $data['name'] ) : __( 'Draft Import', 'ezimport-for-woocommerce' ),
         'type'     => isset( $data['type'] ) ? $data['type'] : 'file',
         'file'     => isset( $data['file'] ) ? $data['file'] : '',
         'url'      => isset( $data['url'] )  ? $data['url']  : '',
@@ -157,7 +157,7 @@ function wpezimport_save_import($name, $type, $post_type, $options, $file_path =
 
     // Use a generic name if none provided
     if (empty($name)) {
-        $name = __('Import created on ', 'wpezimport') . date_i18n(get_option('date_format'));
+        $name = __('Import created on ', 'ezimport-for-woocommerce') . date_i18n(get_option('date_format'));
     }
 
     // Serialize options array for storage

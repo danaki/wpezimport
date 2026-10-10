@@ -1,11 +1,16 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Helper function to get all meta keys from the wp_postmeta table
  */
 function wpezimport_get_meta_keys() {
     global $wpdb;
-    $query = "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key != '' ORDER BY meta_key";
-    $meta_keys = $wpdb->get_col($query);
+    $meta_keys = $wpdb->get_col(
+        $wpdb->prepare("SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key != %s ORDER BY meta_key", '')
+    );
     return $meta_keys;
 }
 

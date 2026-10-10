@@ -127,7 +127,8 @@ function wpezimport_handle_mapping_submit() {
     $import_name = isset($_POST['import_name']) && !empty(trim($_POST['import_name']))
         ? sanitize_text_field($_POST['import_name'])
         : sprintf(
-            __('Import %s', 'wpezimport'),
+            /* translators: %s: date and time of the import. */
+            __('Import %s', 'ezimport-for-woocommerce'),
             current_time('Y-m-d H:i:s')
         );
 
@@ -180,8 +181,8 @@ function wpezimport_handle_mapping_submit() {
         );
     }
 
-    error_log('WPEZIMPORT SAVE - result: ' . var_export($result, true));
-    error_log('WPEZIMPORT SAVE - last_error: ' . $wpdb->last_error);
+    wpezimport_debug_log('WPEZIMPORT SAVE - result: ' . var_export($result, true));
+    wpezimport_debug_log('WPEZIMPORT SAVE - last_error: ' . $wpdb->last_error);
 
     if ($result) {
         // Get the ID of the newly inserted record
@@ -194,14 +195,14 @@ function wpezimport_handle_mapping_submit() {
 
         // Redirect to the manage imports page with success message
         wp_send_json_success(array(
-            'message' => __('Import configuration saved successfully.', 'wpezimport'),
+            'message' => __('Import configuration saved successfully.', 'ezimport-for-woocommerce'),
             'redirect' => admin_url('admin.php?page=wpezimport-manage')
         ));
     } else {
-        error_log('WPEZIMPORT SAVE - FAILED');
+        wpezimport_debug_log('WPEZIMPORT SAVE - FAILED');
         // If database insert failed, show an error
         wp_send_json_error(array(
-            'message' => __('Failed to save import configuration: ', 'wpezimport') . $wpdb->last_error
+            'message' => __('Failed to save import configuration: ', 'ezimport-for-woocommerce') . $wpdb->last_error
         ));
     }
 }

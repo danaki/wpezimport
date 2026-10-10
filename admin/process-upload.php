@@ -63,13 +63,13 @@ function wpezimport_build_xml_tree_recursive(SimpleXMLElement $xml, $current_xpa
  */
 function wpezimport_get_xml_tree_for_selection($file_path) {
     if (!file_exists($file_path)) {
-        return new WP_Error('file_not_found', __('XML file not found for processing.', 'wpezimport'));
+        return new WP_Error('file_not_found', __('XML file not found for processing.', 'ezimport-for-woocommerce'));
     }
 
     libxml_use_internal_errors(true);
     $xml_content = file_get_contents($file_path);
     if (false === $xml_content) {
-        return new WP_Error('file_read_error', __('Could not read XML file content.', 'wpezimport'));
+        return new WP_Error('file_read_error', __('Could not read XML file content.', 'ezimport-for-woocommerce'));
     }
 
     // Attempt to remove UTF-8 BOM if present, as it can cause issues with simplexml_load_string
@@ -81,7 +81,7 @@ function wpezimport_get_xml_tree_for_selection($file_path) {
 
     if (false === $xml) {
         $errors = libxml_get_errors();
-        $error_message = __('Failed to parse XML.', 'wpezimport');
+        $error_message = __('Failed to parse XML.', 'ezimport-for-woocommerce');
         if (!empty($errors)) {
             $error_detail = [];
             foreach ($errors as $error) {
@@ -97,8 +97,36 @@ function wpezimport_get_xml_tree_for_selection($file_path) {
 }
 
 /**
- * Handle AJAX file upload
+ * Store an uploaded import file using WordPress file validation.
  */
+function wpezimport_store_uploaded_file($file, $allow_xml = true) {
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+
+    $mimes = array(
+        'csv'  => 'text/csv',
+        'xls'  => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    $xml_mimes_filter = null;
+    if ($allow_xml) {
+        $mimes['xml'] = 'text/xml';
+        $xml_mimes_filter = static function ($allowed_mimes) {
+            $allowed_mimes['xml'] = 'text/xml';
+            return $allowed_mimes;
+        };
+        add_filter('upload_mimes', $xml_mimes_filter);
+    }
+
+    try {
+        return wp_handle_upload($file, array('test_form' => false, 'mimes' => $mimes));
+    } finally {
+        if ($xml_mimes_filter) {
+            remove_filter('upload_mimes', $xml_mimes_filter);
+        }
+    }
+}
+
+/** Handle AJAX file upload. */
 function wpezimport_handle_file_upload() {
     // Check nonce
     if (!isset($_POST['wpezimport_nonce']) || !wp_verify_nonce($_POST['wpezimport_nonce'], 'wpezimport_file_upload')) {
@@ -124,22 +152,12 @@ function wpezimport_handle_file_upload() {
         wp_send_json_error(array('message' => 'Invalid file type. Please upload a CSV, XLS, XLSX, or XML file.'));
     }
 
-    // Create uploads directory if it doesn't exist
-    $upload_dir = wp_upload_dir();
-    $wpezimport_upload_dir = $upload_dir['basedir'] . '/wpezimport';
-
-    if (!file_exists($wpezimport_upload_dir)) {
-        wp_mkdir_p($wpezimport_upload_dir);
+    $handled = wpezimport_store_uploaded_file($file);
+    if (isset($handled['error'])) {
+        wp_send_json_error(array('message' => $handled['error']));
     }
-
-    // Generate unique filename
-    $filename = wp_unique_filename($wpezimport_upload_dir, $file['name']);
-    $upload_file = $wpezimport_upload_dir . '/' . $filename;
-
-    // Move the uploaded file
-    if (!move_uploaded_file($file['tmp_name'], $upload_file)) {
-        wp_send_json_error(array('message' => 'Failed to move uploaded file.'));
-    }
+    $upload_file = $handled['file'];
+    $filename = basename($upload_file);
 
     // Accept optional draft_id (for re-uploads into an existing draft)
     $draft_id = isset($_POST['draft_id']) ? intval($_POST['draft_id']) : 0;
@@ -152,7 +170,7 @@ function wpezimport_handle_file_upload() {
         $xml_tree_data = wpezimport_get_xml_tree_for_selection($upload_file);
 
         if (is_wp_error($xml_tree_data)) {
-            @unlink($upload_file);
+            wp_delete_file($upload_file);
             wp_send_json_error(array('message' => $xml_tree_data->get_error_message()));
         }
 
@@ -185,7 +203,7 @@ function wpezimport_handle_file_upload() {
         $preview = wpezimport_generate_file_preview($upload_file, $file_ext);
 
         if (is_wp_error($preview)) {
-            @unlink($upload_file);
+            wp_delete_file($upload_file);
             wp_send_json_error(array('message' => $preview->get_error_message()));
         }
 
@@ -244,7 +262,7 @@ function wpezimport_handle_file_upload() {
         // If saved import with preloaded config, redirect straight to mapping
         if ($saved_import) {
             wp_send_json_success(array(
-                'message'  => __('File uploaded successfully. Loading saved import configuration...', 'wpezimport'),
+                'message'  => __('File uploaded successfully. Loading saved import configuration...', 'ezimport-for-woocommerce'),
                 'redirect' => admin_url('admin.php?page=wpezimport-new&step=2&draft_id=' . $draft_id),
                 'draft_id' => $draft_id,
             ));
@@ -261,22 +279,22 @@ function wpezimport_handle_file_upload() {
         if ($file_ext === 'csv') {
             $html .= '<div class="wpezimport-csv-options">';
             $html .= '<div class="wpezimport-csv-option">';
-            $html .= '<label for="csv_delimiter">' . __('Delimiter', 'wpezimport') . '</label>';
+            $html .= '<label for="csv_delimiter">' . __('Delimiter', 'ezimport-for-woocommerce') . '</label>';
             $html .= '<select name="csv_delimiter" id="csv_delimiter">';
-            $html .= '<option value="," ' . selected($current_delimiter, ',', false) . '>' . __('Comma (,)', 'wpezimport') . '</option>';
-            $html .= '<option value=";" ' . selected($current_delimiter, ';', false) . '>' . __('Semicolon (;)', 'wpezimport') . '</option>';
-            $html .= '<option value="tab" ' . selected($current_delimiter, 'tab', false) . '>' . __('Tab', 'wpezimport') . '</option>';
-            $html .= '<option value="|" ' . selected($current_delimiter, '|', false) . '>' . __('Pipe (|)', 'wpezimport') . '</option>';
+            $html .= '<option value="," ' . selected($current_delimiter, ',', false) . '>' . __('Comma (,)', 'ezimport-for-woocommerce') . '</option>';
+            $html .= '<option value=";" ' . selected($current_delimiter, ';', false) . '>' . __('Semicolon (;)', 'ezimport-for-woocommerce') . '</option>';
+            $html .= '<option value="tab" ' . selected($current_delimiter, 'tab', false) . '>' . __('Tab', 'ezimport-for-woocommerce') . '</option>';
+            $html .= '<option value="|" ' . selected($current_delimiter, '|', false) . '>' . __('Pipe (|)', 'ezimport-for-woocommerce') . '</option>';
             $html .= '</select>';
             $html .= '</div>';
             $html .= '<div class="wpezimport-csv-option">';
-            $html .= '<label for="csv_enclosure">' . __('Enclosure', 'wpezimport') . '</label>';
+            $html .= '<label for="csv_enclosure">' . __('Enclosure', 'ezimport-for-woocommerce') . '</label>';
             $html .= '<select name="csv_enclosure" id="csv_enclosure">';
-            $html .= '<option value="&quot;" ' . selected($current_enclosure, '"', false) . '>' . __('Double Quote (")', 'wpezimport') . '</option>';
-            $html .= '<option value="&#39;" ' . selected($current_enclosure, "'", false) . '>' . __("Single Quote (')", 'wpezimport') . '</option>';
+            $html .= '<option value="&quot;" ' . selected($current_enclosure, '"', false) . '>' . __('Double Quote (")', 'ezimport-for-woocommerce') . '</option>';
+            $html .= '<option value="&#39;" ' . selected($current_enclosure, "'", false) . '>' . __("Single Quote (')", 'ezimport-for-woocommerce') . '</option>';
             $html .= '</select>';
             $html .= '</div>';
-            $html .= '<button type="button" class="button" id="wpezimport-refresh-preview">' . __('Refresh Preview', 'wpezimport') . '</button>';
+            $html .= '<button type="button" class="button" id="wpezimport-refresh-preview">' . __('Refresh Preview', 'ezimport-for-woocommerce') . '</button>';
             $html .= '</div>';
         }
 
@@ -284,7 +302,7 @@ function wpezimport_handle_file_upload() {
         // Post type hardcoded to 'product' (WooCommerce)
         $html .= '<input type="hidden" name="wpezimport_preview_post_type" value="product">';
         $html .= '<div class="wpezimport-preview-actions">';
-        $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'wpezimport') . '</button>';
+        $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'ezimport-for-woocommerce') . '</button>';
         $html .= '</div>';
         $html .= '</form>';
 
@@ -314,7 +332,8 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
 
     if (is_wp_error($response)) {
         return new WP_Error('fetch_failed', sprintf(
-            __('Failed to download XML from URL: %s', 'wpezimport'),
+            /* translators: %s: error returned while downloading the XML file. */
+            __('Failed to download XML from URL: %s', 'ezimport-for-woocommerce'),
             $response->get_error_message()
         ));
     }
@@ -322,14 +341,15 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
     $http_code = wp_remote_retrieve_response_code($response);
     if ($http_code !== 200) {
         return new WP_Error('http_error', sprintf(
-            __('URL returned HTTP %d instead of 200.', 'wpezimport'),
+            /* translators: %d: HTTP response status code. */
+            __('URL returned HTTP %d instead of 200.', 'ezimport-for-woocommerce'),
             $http_code
         ));
     }
 
     $body = wp_remote_retrieve_body($response);
     if (empty($body)) {
-        return new WP_Error('empty_body', __('Downloaded file is empty.', 'wpezimport'));
+        return new WP_Error('empty_body', __('Downloaded file is empty.', 'ezimport-for-woocommerce'));
     }
 
     // Save to a temp file
@@ -341,7 +361,7 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
     $filename = 'url_edit_' . md5($url) . '_' . time() . '.xml';
     $file_path = $wpezimport_dir . '/' . $filename;
     if (file_put_contents($file_path, $body) === false) {
-        return new WP_Error('save_failed', __('Failed to save downloaded XML file.', 'wpezimport'));
+        return new WP_Error('save_failed', __('Failed to save downloaded XML file.', 'ezimport-for-woocommerce'));
     }
 
     // Free the in-memory body; parse from disk to keep memory usage low on large feeds
@@ -353,10 +373,11 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
     if ($xml === false) {
         $errors = libxml_get_errors();
         libxml_clear_errors();
-        $msg = !empty($errors) ? $errors[0]->message : __('Unknown XML parse error', 'wpezimport');
-        @unlink($file_path);
+        $msg = !empty($errors) ? $errors[0]->message : __('Unknown XML parse error', 'ezimport-for-woocommerce');
+        wp_delete_file($file_path);
         return new WP_Error('xml_parse', sprintf(
-            __('Failed to parse XML: %s', 'wpezimport'),
+            /* translators: %s: XML parser error message. */
+            __('Failed to parse XML: %s', 'ezimport-for-woocommerce'),
             trim($msg)
         ));
     }
@@ -364,9 +385,10 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
 
     $selected_nodes = $xml->xpath($xpath_path);
     if ($selected_nodes === false || empty($selected_nodes)) {
-        @unlink($file_path);
+        wp_delete_file($file_path);
         return new WP_Error('xpath_empty', sprintf(
-            __('XPath "%s" did not match any elements in the fetched XML.', 'wpezimport'),
+            /* translators: %s: XPath expression entered for the XML feed. */
+            __('XPath "%s" did not match any elements in the fetched XML.', 'ezimport-for-woocommerce'),
             $xpath_path
         ));
     }
@@ -398,17 +420,17 @@ function wpezimport_fetch_xml_from_url($url, $xpath_path) {
  */
 function wpezimport_refetch_xml_from_url_callback() {
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'wpezimport_ajax_nonce')) {
-        wp_send_json_error(array('message' => __('Security check failed.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Security check failed.', 'ezimport-for-woocommerce')));
     }
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('Permission denied.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Permission denied.', 'ezimport-for-woocommerce')));
     }
 
     $url   = isset($_POST['url'])   ? esc_url_raw(wp_unslash($_POST['url']))   : '';
     $xpath = isset($_POST['xpath']) ? sanitize_text_field(wp_unslash($_POST['xpath'])) : '';
 
     if (empty($url) || empty($xpath)) {
-        wp_send_json_error(array('message' => __('URL and XPath are required.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('URL and XPath are required.', 'ezimport-for-woocommerce')));
     }
 
     $draft_id = isset($_POST['draft_id']) ? intval($_POST['draft_id']) : 0;
@@ -444,7 +466,7 @@ function wpezimport_refetch_xml_from_url_callback() {
     }
 
     wp_send_json_success(array(
-        'message'       => __('XML structure refreshed successfully.', 'wpezimport'),
+        'message'       => __('XML structure refreshed successfully.', 'ezimport-for-woocommerce'),
         'xml_html'      => $xml_html,
         'total_samples' => count($result['xml_samples']),
         'draft_id'      => $draft_id,
@@ -488,15 +510,6 @@ function wpezimport_handle_url_import() {
         wp_mkdir_p($wpezimport_upload_dir);
     }
 
-    // Generate a filename from the URL
-    $filename = basename(parse_url($file_url, PHP_URL_PATH));
-    if (empty($filename) || !pathinfo($filename, PATHINFO_EXTENSION)) {
-        $filename = 'import_' . date('YmdHis') . '.xml';
-    }
-    $filename = sanitize_file_name($filename);
-    $filename = wp_unique_filename($wpezimport_upload_dir, $filename);
-    $upload_file = $wpezimport_upload_dir . '/' . $filename;
-
     // Download the file
     $response = wp_remote_get($file_url, array(
         'timeout' => 60,
@@ -516,25 +529,23 @@ function wpezimport_handle_url_import() {
         wp_send_json_error(array('message' => 'Downloaded file is empty.'));
     }
 
+    // Choose the extension before writing the file so no filesystem rename is needed.
+    $filename = basename((string) wp_parse_url($file_url, PHP_URL_PATH));
+    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if ($file_ext === '') {
+        $is_xml = strpos(ltrim($file_content), '<') === 0;
+        $file_ext = $is_xml ? 'xml' : 'csv';
+        $filename = 'import_' . gmdate('YmdHis') . '.' . $file_ext;
+    }
+    if (!in_array($file_ext, array('csv', 'xls', 'xlsx', 'xml'), true)) {
+        wp_send_json_error(array('message' => __('Unsupported file type.', 'ezimport-for-woocommerce')));
+    }
+    $filename = wp_unique_filename($wpezimport_upload_dir, sanitize_file_name($filename));
+    $upload_file = $wpezimport_upload_dir . '/' . $filename;
+
     // Save the file
     if (file_put_contents($upload_file, $file_content) === false) {
-        wp_send_json_error(array('message' => __('Failed to save downloaded file.', 'wpezimport')));
-    }
-
-    // Try to determine content type for files without extension
-    $file_ext = pathinfo($upload_file, PATHINFO_EXTENSION);
-    if (empty($file_ext)) {
-        if (substr((string)$file_content, 0, 5) === '<?xml' || substr((string)$file_content, 0, 9) === '<\0?\0x\0m\0l' || strpos((string)$file_content, '<' . '?xml') !== false) {
-            $file_ext = 'xml';
-            $new_file = $upload_file . '.xml';
-            rename($upload_file, $new_file);
-            $upload_file = $new_file;
-        } else {
-            $file_ext = 'csv';
-            $new_file = $upload_file . '.csv';
-            rename($upload_file, $new_file);
-            $upload_file = $new_file;
-        }
+        wp_send_json_error(array('message' => __('Failed to save downloaded file.', 'ezimport-for-woocommerce')));
     }
 
     // Process the file based on its type
@@ -542,7 +553,7 @@ function wpezimport_handle_url_import() {
         $xml_tree_data = wpezimport_get_xml_tree_for_selection($upload_file);
 
         if (is_wp_error($xml_tree_data)) {
-            @unlink($upload_file);
+            wp_delete_file($upload_file);
             wp_send_json_error(array('message' => $xml_tree_data->get_error_message()));
         }
 
@@ -602,12 +613,12 @@ function wpezimport_handle_url_import() {
         $html .= $preview_table_html;
         $html .= '<input type="hidden" name="wpezimport_preview_post_type" value="product">';
         $html .= '<div class="wpezimport-preview-actions">';
-        $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'wpezimport') . '</button>';
+        $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'ezimport-for-woocommerce') . '</button>';
         $html .= '</div>';
         $html .= '</form>';
 
         wp_send_json_success(array(
-            'message'   => __('File imported successfully.', 'wpezimport'),
+            'message'   => __('File imported successfully.', 'ezimport-for-woocommerce'),
             'preview'   => $html,
             'file_name' => $filename,
             'next_step' => admin_url('admin.php?page=wpezimport-new&step=2&draft_id=' . $draft_id),
@@ -623,12 +634,12 @@ add_action('wp_ajax_wpezimport_url_import', 'wpezimport_handle_url_import');
  */
 function wpezimport_finalize_step1_selection_callback() {
     if (!isset($_POST['finalize_nonce']) || !wp_verify_nonce($_POST['finalize_nonce'], 'wpezimport_finalize_step1_selection_nonce')) {
-        wp_send_json_error(array('message' => __('Security check failed for finalizing selection.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Security check failed for finalizing selection.', 'ezimport-for-woocommerce')));
         return;
     }
 
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'ezimport-for-woocommerce')));
         return;
     }
 
@@ -637,37 +648,37 @@ function wpezimport_finalize_step1_selection_callback() {
     $selected_post_type = isset($_POST['selected_post_type']) ? sanitize_text_field(wp_unslash($_POST['selected_post_type'])) : null;
 
     if (empty($selected_xpath) || empty($selected_post_type)) {
-        wp_send_json_error(array('message' => __('Missing selected XML item path or post type.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing selected XML item path or post type.', 'ezimport-for-woocommerce')));
         return;
     }
 
     if ($draft_id <= 0) {
-        wp_send_json_error(array('message' => __('Missing draft ID.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing draft ID.', 'ezimport-for-woocommerce')));
         return;
     }
 
     $draft = wpezimport_get_draft($draft_id);
     if (!$draft) {
-        wp_send_json_error(array('message' => __('Draft not found.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Draft not found.', 'ezimport-for-woocommerce')));
         return;
     }
 
     $uploaded_file_path = isset($draft->state['uploaded_file']) ? $draft->state['uploaded_file'] : '';
     if (empty($uploaded_file_path) || !file_exists($uploaded_file_path)) {
-        wp_send_json_error(array('message' => __('Uploaded XML file not found or has been removed.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Uploaded XML file not found or has been removed.', 'ezimport-for-woocommerce')));
         return;
     }
 
     libxml_use_internal_errors(true);
     $xml = simplexml_load_file($uploaded_file_path, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
     if (false === $xml) {
-        wp_send_json_error(array('message' => __('Failed to re-parse XML file for finalization.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Failed to re-parse XML file for finalization.', 'ezimport-for-woocommerce')));
         return;
     }
 
     $selected_nodes = $xml->xpath($selected_xpath);
     if (false === $selected_nodes || empty($selected_nodes)) {
-        wp_send_json_error(array('message' => __('The selected XML path did not return any elements. Path: ', 'wpezimport') . esc_html($selected_xpath)));
+        wp_send_json_error(array('message' => __('The selected XML path did not return any elements. Path: ', 'ezimport-for-woocommerce') . esc_html($selected_xpath)));
         return;
     }
 
@@ -696,7 +707,7 @@ function wpezimport_finalize_step1_selection_callback() {
     ));
 
     wp_send_json_success(array(
-        'message'      => __('XML item selection finalized. Proceeding to mapping.', 'wpezimport'),
+        'message'      => __('XML item selection finalized. Proceeding to mapping.', 'ezimport-for-woocommerce'),
         'redirect_url' => admin_url('admin.php?page=wpezimport-new&step=2&draft_id=' . $draft_id),
         'draft_id'     => $draft_id,
     ));
@@ -709,25 +720,25 @@ add_action('wp_ajax_wpezimport_finalize_step1_selection', 'wpezimport_finalize_s
 function wpezimport_refresh_csv_preview_callback() {
     // Verify nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'wpezimport_file_upload')) {
-        wp_send_json_error(array('message' => __('Security check failed.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Security check failed.', 'ezimport-for-woocommerce')));
     }
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'ezimport-for-woocommerce')));
     }
 
     $draft_id = isset($_POST['draft_id']) ? intval($_POST['draft_id']) : 0;
     if ($draft_id <= 0) {
-        wp_send_json_error(array('message' => __('Missing draft ID.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing draft ID.', 'ezimport-for-woocommerce')));
     }
 
     $draft = wpezimport_get_draft($draft_id);
     if (!$draft) {
-        wp_send_json_error(array('message' => __('Draft not found.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Draft not found.', 'ezimport-for-woocommerce')));
     }
 
     $upload_file = isset($draft->state['uploaded_file']) ? $draft->state['uploaded_file'] : '';
     if (!$upload_file || !file_exists($upload_file)) {
-        wp_send_json_error(array('message' => __('No file found. Please re-upload.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('No file found. Please re-upload.', 'ezimport-for-woocommerce')));
     }
 
     // Get delimiter and enclosure from POST
@@ -743,7 +754,7 @@ function wpezimport_refresh_csv_preview_callback() {
     $file_ext = strtolower(pathinfo($upload_file, PATHINFO_EXTENSION));
 
     if ($file_ext !== 'csv') {
-        wp_send_json_error(array('message' => __('Not a CSV file.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Not a CSV file.', 'ezimport-for-woocommerce')));
     }
 
     // Extract headers and generate preview with new options
@@ -766,28 +777,28 @@ function wpezimport_refresh_csv_preview_callback() {
     // Add CSV options
     $html .= '<div class="wpezimport-csv-options">';
     $html .= '<div class="wpezimport-csv-option">';
-    $html .= '<label for="csv_delimiter">' . __('Delimiter', 'wpezimport') . '</label>';
+    $html .= '<label for="csv_delimiter">' . __('Delimiter', 'ezimport-for-woocommerce') . '</label>';
     $html .= '<select name="csv_delimiter" id="csv_delimiter">';
-    $html .= '<option value="," ' . selected($delimiter, ',', false) . '>' . __('Comma (,)', 'wpezimport') . '</option>';
-    $html .= '<option value=";" ' . selected($delimiter, ';', false) . '>' . __('Semicolon (;)', 'wpezimport') . '</option>';
-    $html .= '<option value="tab" ' . selected($delimiter, 'tab', false) . '>' . __('Tab', 'wpezimport') . '</option>';
-    $html .= '<option value="|" ' . selected($delimiter, '|', false) . '>' . __('Pipe (|)', 'wpezimport') . '</option>';
+    $html .= '<option value="," ' . selected($delimiter, ',', false) . '>' . __('Comma (,)', 'ezimport-for-woocommerce') . '</option>';
+    $html .= '<option value=";" ' . selected($delimiter, ';', false) . '>' . __('Semicolon (;)', 'ezimport-for-woocommerce') . '</option>';
+    $html .= '<option value="tab" ' . selected($delimiter, 'tab', false) . '>' . __('Tab', 'ezimport-for-woocommerce') . '</option>';
+    $html .= '<option value="|" ' . selected($delimiter, '|', false) . '>' . __('Pipe (|)', 'ezimport-for-woocommerce') . '</option>';
     $html .= '</select>';
     $html .= '</div>';
     $html .= '<div class="wpezimport-csv-option">';
-    $html .= '<label for="csv_enclosure">' . __('Enclosure', 'wpezimport') . '</label>';
+    $html .= '<label for="csv_enclosure">' . __('Enclosure', 'ezimport-for-woocommerce') . '</label>';
     $html .= '<select name="csv_enclosure" id="csv_enclosure">';
-    $html .= '<option value="&quot;" ' . selected($enclosure, '"', false) . '>' . __('Double Quote (")', 'wpezimport') . '</option>';
-    $html .= '<option value="&#39;" ' . selected($enclosure, "'", false) . '>' . __("Single Quote (')", 'wpezimport') . '</option>';
+    $html .= '<option value="&quot;" ' . selected($enclosure, '"', false) . '>' . __('Double Quote (")', 'ezimport-for-woocommerce') . '</option>';
+    $html .= '<option value="&#39;" ' . selected($enclosure, "'", false) . '>' . __("Single Quote (')", 'ezimport-for-woocommerce') . '</option>';
     $html .= '</select>';
     $html .= '</div>';
-    $html .= '<button type="button" class="button" id="wpezimport-refresh-preview">' . __('Refresh Preview', 'wpezimport') . '</button>';
+    $html .= '<button type="button" class="button" id="wpezimport-refresh-preview">' . __('Refresh Preview', 'ezimport-for-woocommerce') . '</button>';
     $html .= '</div>';
 
     $html .= $preview_table_html;
     $html .= '<input type="hidden" name="wpezimport_preview_post_type" value="product">';
     $html .= '<div class="wpezimport-preview-actions">';
-    $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'wpezimport') . '</button>';
+    $html .= '<button type="submit" class="button button-primary">' . __('Continue to Mapping', 'ezimport-for-woocommerce') . '</button>';
     $html .= '</div>';
     $html .= '</form>';
 
@@ -855,9 +866,11 @@ function wpezimport_extract_file_headers($file_path, $file_type, $delimiter = ',
 
     if ($file_type === 'csv') {
         // Extract headers from CSV file
-        if (($handle = fopen($file_path, 'r')) !== false) {
-            $headers = fgetcsv($handle, 0, $delimiter, $enclosure);
-            fclose($handle);
+        try {
+            $csv = new \SplFileObject($file_path, 'r');
+            $headers = $csv->fgetcsv($delimiter, $enclosure);
+        } catch (\RuntimeException $e) {
+            return array();
         }
     } else {
         // Extract headers from XLS/XLSX using PhpSpreadsheet
@@ -898,7 +911,7 @@ function wpezimport_extract_file_headers($file_path, $file_type, $delimiter = ',
             unset($spreadsheet);
 
         } catch (\Exception $e) {
-            error_log('Failed to extract headers: ' . $e->getMessage());
+            wpezimport_debug_log('Failed to extract headers: ' . $e->getMessage());
             return array();
         }
     }
@@ -913,11 +926,13 @@ function wpezimport_extract_file_headers($file_path, $file_type, $delimiter = ',
         $num_columns = 0;
 
         if ($file_type === 'csv') {
-            if (($handle = fopen($file_path, 'r')) !== false) {
-                if (($data = fgetcsv($handle)) !== false) {
+            try {
+                $csv = new \SplFileObject($file_path, 'r');
+                if (($data = $csv->fgetcsv($delimiter, $enclosure)) !== false) {
                     $num_columns = count($data);
                 }
-                fclose($handle);
+            } catch (\RuntimeException $e) {
+                $num_columns = 0;
             }
         } else {
             // For XLS/XLSX, we need to determine from the first row data
@@ -969,9 +984,9 @@ function wpezimport_extract_file_headers($file_path, $file_type, $delimiter = ',
  */
 function wpezimport_generate_preview_html($headers, $data, $is_xml = false) {
     // Debug information
-    error_log('Generating preview HTML with headers: ' . print_r($headers, true));
-    error_log('Data rows count: ' . (is_array($data) ? count($data) : 'not an array'));
-    error_log('Is XML: ' . ($is_xml ? 'true' : 'false'));
+    wpezimport_debug_log('Generating preview HTML with headers: ' . print_r($headers, true));
+    wpezimport_debug_log('Data rows count: ' . (is_array($data) ? count($data) : 'not an array'));
+    wpezimport_debug_log('Is XML: ' . ($is_xml ? 'true' : 'false'));
 
     $html = '<div class="wpezimport-table-wrapper">';
     $html .= '<table class="wp-list-table widefat striped">';
@@ -1023,7 +1038,7 @@ function wpezimport_generate_preview_html($headers, $data, $is_xml = false) {
 
     // Show message if no data rows were rendered
     if (empty($data) || !is_array($data)) {
-        $html .= '<tr><td colspan="' . count($headers) . '">' . __('No data found in the file.', 'wpezimport') . '</td></tr>';
+        $html .= '<tr><td colspan="' . count($headers) . '">' . __('No data found in the file.', 'ezimport-for-woocommerce') . '</td></tr>';
     }
     $html .= '</tbody>';
 
@@ -1033,8 +1048,8 @@ function wpezimport_generate_preview_html($headers, $data, $is_xml = false) {
     // Add XML info if applicable
     if ($is_xml) {
         $html .= '<div class="wpezimport-xml-info">';
-        $html .= '<p><strong>' . __('XML Import Mode:', 'wpezimport') . '</strong> ';
-        $html .= __('Drag XPath expressions to map fields. Full XPath will be shown in curly braces {}.', 'wpezimport');
+        $html .= '<p><strong>' . __('XML Import Mode:', 'ezimport-for-woocommerce') . '</strong> ';
+        $html .= __('Drag XPath expressions to map fields. Full XPath will be shown in curly braces {}.', 'ezimport-for-woocommerce');
         $html .= '</p>';
         $html .= '</div>';
     }
@@ -1059,25 +1074,29 @@ function wpezimport_generate_file_preview($file_path, $file_type, $delimiter = '
         $delimiter = "\t";
     }
 
-    error_log("wpezimport_generate_file_preview: file=$file_path, type=$file_type, delimiter='$delimiter', enclosure='$enclosure'");
+    wpezimport_debug_log("wpezimport_generate_file_preview: file=$file_path, type=$file_type, delimiter='$delimiter', enclosure='$enclosure'");
 
     if ($file_type === 'csv') {
         // Process CSV file
-        if (($handle = fopen($file_path, 'r')) !== false) {
+        try {
+            $csv = new \SplFileObject($file_path, 'r');
             // Skip the header row
-            $header = fgetcsv($handle, 0, $delimiter, $enclosure);
-            error_log("wpezimport: Skipped header row: " . print_r($header, true));
+            $header = $csv->fgetcsv($delimiter, $enclosure);
+            wpezimport_debug_log("wpezimport: Skipped header row: " . print_r($header, true));
 
             $row = 0;
-            while (($data = fgetcsv($handle, 0, $delimiter, $enclosure)) !== false && $row < $max_data_rows) {
-                error_log("wpezimport: Read data row $row: " . print_r($data, true));
+            while (!$csv->eof() && $row < $max_data_rows) {
+                $data = $csv->fgetcsv($delimiter, $enclosure);
+                if ($data === false || $data === array(null)) {
+                    break;
+                }
+                wpezimport_debug_log("wpezimport: Read data row $row: " . print_r($data, true));
                 $preview_data[] = $data;
                 $row++;
             }
-            fclose($handle);
-            error_log("wpezimport: Total data rows read: " . count($preview_data));
-        } else {
-            error_log("wpezimport: Failed to open file: $file_path");
+            wpezimport_debug_log("wpezimport: Total data rows read: " . count($preview_data));
+        } catch (\RuntimeException $e) {
+            wpezimport_debug_log("wpezimport: Failed to open file: $file_path");
         }
     } else {
         // For XLS/XLSX files, use PhpSpreadsheet library
@@ -1147,42 +1166,35 @@ function wpezimport_generate_file_preview($file_path, $file_type, $delimiter = '
  */
 function wpezimport_reupload_file_callback() {
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'wpezimport_file_upload')) {
-        wp_send_json_error(array('message' => __('Security check failed.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Security check failed.', 'ezimport-for-woocommerce')));
     }
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('Permission denied.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Permission denied.', 'ezimport-for-woocommerce')));
     }
 
     $draft_id = isset($_POST['draft_id']) ? intval($_POST['draft_id']) : 0;
     if ($draft_id <= 0) {
-        wp_send_json_error(array('message' => __('Missing draft ID.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing draft ID.', 'ezimport-for-woocommerce')));
     }
 
     if (!isset($_FILES['wpezimport_reupload_file']) || $_FILES['wpezimport_reupload_file']['error'] !== UPLOAD_ERR_OK) {
         $error = isset($_FILES['wpezimport_reupload_file'])
             ? wpezimport_get_upload_error_message($_FILES['wpezimport_reupload_file']['error'])
-            : __('No file was uploaded.', 'wpezimport');
+            : __('No file was uploaded.', 'ezimport-for-woocommerce');
         wp_send_json_error(array('message' => $error));
     }
 
     $file = $_FILES['wpezimport_reupload_file'];
     $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($file_ext, array('csv', 'xls', 'xlsx'), true)) {
-        wp_send_json_error(array('message' => __('Invalid file type. Please upload a CSV, XLS, or XLSX file.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Invalid file type. Please upload a CSV, XLS, or XLSX file.', 'ezimport-for-woocommerce')));
     }
 
-    // Save file to uploads dir
-    $upload_dir = wp_upload_dir();
-    $dir = $upload_dir['basedir'] . '/wpezimport';
-    if (!file_exists($dir)) {
-        wp_mkdir_p($dir);
+    $handled = wpezimport_store_uploaded_file($file, false);
+    if (isset($handled['error'])) {
+        wp_send_json_error(array('message' => $handled['error']));
     }
-    $filename = wp_unique_filename($dir, $file['name']);
-    $upload_file = $dir . '/' . $filename;
-
-    if (!move_uploaded_file($file['tmp_name'], $upload_file)) {
-        wp_send_json_error(array('message' => __('Failed to move uploaded file.', 'wpezimport')));
-    }
+    $upload_file = $handled['file'];
 
     // Extract headers
     $draft = wpezimport_get_draft($draft_id);
@@ -1193,8 +1205,8 @@ function wpezimport_reupload_file_callback() {
     $file_headers = wpezimport_extract_file_headers($upload_file, $file_ext, $delimiter, $enclosure);
 
     if (empty($file_headers)) {
-        @unlink($upload_file);
-        wp_send_json_error(array('message' => __('Could not extract columns from the file. Please check the file format.', 'wpezimport')));
+        wp_delete_file($upload_file);
+        wp_send_json_error(array('message' => __('Could not extract columns from the file. Please check the file format.', 'ezimport-for-woocommerce')));
     }
 
     // Update draft state with new file and headers
@@ -1214,7 +1226,8 @@ function wpezimport_reupload_file_callback() {
     }
 
     wp_send_json_success(array(
-        'message'  => sprintf(__('File uploaded successfully. %d columns found.', 'wpezimport'), count($file_headers)),
+        /* translators: %d: number of detected columns in the uploaded file. */
+        'message'  => sprintf(__('File uploaded successfully. %d columns found.', 'ezimport-for-woocommerce'), count($file_headers)),
         'columns_html' => $html,
         'headers'  => $file_headers,
     ));

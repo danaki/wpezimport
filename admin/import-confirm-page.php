@@ -29,10 +29,10 @@ if ($import_id > 0) {
 if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
     // Verify nonce
     if (!isset($_POST['wpezimport_confirm_nonce']) || !wp_verify_nonce($_POST['wpezimport_confirm_nonce'], 'wpezimport_confirm_import')) {
-        wp_die(__('Security check failed.', 'wpezimport'));
+        wp_die(esc_html__('Security check failed.', 'ezimport-for-woocommerce'));
     }
     if (!current_user_can('manage_options')) {
-        wp_die(__('You do not have permission to perform this action.', 'wpezimport'));
+        wp_die(esc_html__('You do not have permission to perform this action.', 'ezimport-for-woocommerce'));
     }
 
     $run_import_id = intval($_POST['import_id']);
@@ -52,7 +52,7 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
             } else if ($run_import->type === 'file') {
                 // File imports: upload the file, store path, then redirect
                 if (!isset($_FILES['import_file']) || $_FILES['import_file']['error'] !== UPLOAD_ERR_OK) {
-                    wp_die(__('Please upload a file to proceed with this import.', 'wpezimport'));
+                    wp_die(esc_html__('Please upload a file to proceed with this import.', 'ezimport-for-woocommerce'));
                 }
 
                 $file = $_FILES['import_file'];
@@ -63,28 +63,23 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
                 $is_xml_file = ($file_ext === 'xml');
 
                 if ($expected_xml && !$is_xml_file) {
-                    wp_die(__('This import was configured for XML files. Please upload an XML file.', 'wpezimport'));
+                    wp_die(esc_html__('This import was configured for XML files. Please upload an XML file.', 'ezimport-for-woocommerce'));
                 }
                 if (!$expected_xml && $is_xml_file) {
-                    wp_die(__('This import was configured for CSV/XLS files. Please upload a CSV, XLS, or XLSX file.', 'wpezimport'));
+                    wp_die(esc_html__('This import was configured for CSV/XLS files. Please upload a CSV, XLS, or XLSX file.', 'ezimport-for-woocommerce'));
                 }
 
                 $allowed_extensions = $expected_xml ? array('xml') : array('csv', 'xls', 'xlsx');
                 if (!in_array($file_ext, $allowed_extensions)) {
-                    wp_die(sprintf(__('Invalid file type. Allowed: %s', 'wpezimport'), implode(', ', $allowed_extensions)));
+                    /* translators: %s: comma-separated list of allowed file extensions. */
+                    wp_die(sprintf(esc_html__('Invalid file type. Allowed: %s', 'ezimport-for-woocommerce'), esc_html(implode(', ', $allowed_extensions))));
                 }
 
-                // Move uploaded file
-                $upload_dir = wp_upload_dir();
-                $wpezimport_dir = $upload_dir['basedir'] . '/wpezimport';
-                if (!file_exists($wpezimport_dir)) {
-                    wp_mkdir_p($wpezimport_dir);
+                $handled = wpezimport_store_uploaded_file($file, $expected_xml);
+                if (isset($handled['error'])) {
+                    wp_die(esc_html($handled['error']));
                 }
-
-                $upload_file = $wpezimport_dir . '/' . sanitize_file_name($file['name']);
-                if (!move_uploaded_file($file['tmp_name'], $upload_file)) {
-                    wp_die(__('Failed to upload file.', 'wpezimport'));
-                }
+                $upload_file = $handled['file'];
 
                 // Store file path in the saved import record so the batch processor can find it
                 $wpdb->update(
@@ -105,14 +100,14 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
 // Display the confirmation page UI
 ?>
 <div class="wrap wpezimport-admin-wrap">
-    <h1 class="wp-heading-inline"><?php _e('Confirm Import', 'wpezimport'); ?></h1>
+    <h1 class="wp-heading-inline"><?php esc_html_e('Confirm Import', 'ezimport-for-woocommerce'); ?></h1>
 
     <?php if (!$import): ?>
         <div class="notice notice-error">
-            <p><?php _e('Import not found.', 'wpezimport'); ?></p>
+            <p><?php esc_html_e('Import not found.', 'ezimport-for-woocommerce'); ?></p>
         </div>
         <p>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php _e('Back to Manage Imports', 'wpezimport'); ?></a>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a>
         </p>
     <?php else: ?>
         <div class="wpezimport-confirm-box">
@@ -120,40 +115,41 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
                 <?php wp_nonce_field('wpezimport_confirm_import', 'wpezimport_confirm_nonce'); ?>
                 <input type="hidden" name="import_id" value="<?php echo esc_attr($import_id); ?>">
 
-            <h2><?php _e('Import Details', 'wpezimport'); ?></h2>
+            <h2><?php esc_html_e('Import Details', 'ezimport-for-woocommerce'); ?></h2>
 
             <table class="form-table">
                 <tr>
-                    <th scope="row"><?php _e('Import Name', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Import Name', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html($import->name); ?></td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php _e('Import Type', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Import Type', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html(ucfirst($import->type)); ?></td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php _e('Source', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Source', 'ezimport-for-woocommerce'); ?></th>
                     <td>
                         <?php if ($import->type === 'url' && !empty($import->url)): ?>
                             <a href="<?php echo esc_url($import->url); ?>" target="_blank"><?php echo esc_html($import->url); ?></a>
                         <?php else:
                             $import_options = maybe_unserialize($import->options);
                             $expected_xml = isset($import_options['is_xml']) ? $import_options['is_xml'] : false;
-                            $expected_format = $expected_xml ? __('XML', 'wpezimport') : __('CSV/XLS/XLSX', 'wpezimport');
+                            $expected_format = $expected_xml ? __('XML', 'ezimport-for-woocommerce') : __('CSV/XLS/XLSX', 'ezimport-for-woocommerce');
                             $accepted_extensions = $expected_xml ? '.xml' : '.csv,.xls,.xlsx';
-                            $forbidden_format = $expected_xml ? __('CSV/Excel', 'wpezimport') : __('XML', 'wpezimport');
+                            $forbidden_format = $expected_xml ? __('CSV/Excel', 'ezimport-for-woocommerce') : __('XML', 'ezimport-for-woocommerce');
                         ?>
                             <input type="file" name="import_file" id="import_file" accept="<?php echo esc_attr($accepted_extensions); ?>" required>
                             <input type="hidden" name="expected_xml" value="<?php echo $expected_xml ? '1' : '0'; ?>">
                             <p class="description">
-                                <?php printf(__('Upload a %s file.', 'wpezimport'), '<strong>' . $expected_format . '</strong>'); ?>
-                                <em><?php printf(__('%s files are not compatible.', 'wpezimport'), $forbidden_format); ?></em>
+                                <?php /* translators: %s: required file format. */ ?>
+                                <?php printf(esc_html__('Upload a %s file.', 'ezimport-for-woocommerce'), esc_html($expected_format)); ?>
+                                <em><?php /* translators: %s: incompatible file format. */ printf(esc_html__('%s files are not compatible.', 'ezimport-for-woocommerce'), esc_html($forbidden_format)); ?></em>
                             </p>
                         <?php endif; ?>
                     </td>
                 </tr>
                 <!--tr>
-                    <th scope="row"><?php _e('Post Type', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Post Type', 'ezimport-for-woocommerce'); ?></th>
                     <td>
                         <?php
                         // Handle possible undefined post_type property
@@ -174,7 +170,7 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
             </table>
 
                 <div class="form-field">
-                    <h3><?php _e('Unique Identifier Status', 'wpezimport'); ?></h3>
+                    <h3><?php esc_html_e('Unique Identifier Status', 'ezimport-for-woocommerce'); ?></h3>
 
                     <?php
                     // Show information about unique identifier
@@ -185,34 +181,34 @@ if (isset($_POST['confirm_import']) && isset($_POST['import_id'])) {
                     ?>
                         <div class="notice notice-warning inline">
                             <p>
-                                <strong><?php _e('Warning:', 'wpezimport'); ?></strong>
-                                <?php _e('No unique identifier field is defined for this import. All items will be created as new records.', 'wpezimport'); ?>
+                                <strong><?php esc_html_e('Warning:', 'ezimport-for-woocommerce'); ?></strong>
+                                <?php esc_html_e('No unique identifier field is defined for this import. All items will be created as new records.', 'ezimport-for-woocommerce'); ?>
                             </p>
                             <p>
-                                <?php _e('To enable updating of existing records, go back to the Edit Import page and select a unique identifier field.', 'wpezimport'); ?>
+                                <?php esc_html_e('To enable updating of existing records, go back to the Edit Import page and select a unique identifier field.', 'ezimport-for-woocommerce'); ?>
                             </p>
                             <p>
                                 <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new&step=2&import_id=' . esc_attr($import_id))); ?>" class="button">
-                                    <?php _e('Edit Import Settings', 'wpezimport'); ?>
+                                    <?php esc_html_e('Edit Import Settings', 'ezimport-for-woocommerce'); ?>
                                 </a>
                             </p>
                         </div>
                     <?php else : ?>
                         <div class="notice notice-info inline">
                             <p>
-                                <strong><?php _e('Unique Identifier Field:', 'wpezimport'); ?></strong>
+                                <strong><?php esc_html_e('Unique Identifier Field:', 'ezimport-for-woocommerce'); ?></strong>
                                 <code><?php echo esc_html($unique_identifier_source); ?></code>
                             </p>
                             <p>
-                                <?php _e('This field will be used to detect existing records for updating instead of creating duplicates.', 'wpezimport'); ?>
+                                <?php esc_html_e('This field will be used to detect existing records for updating instead of creating duplicates.', 'ezimport-for-woocommerce'); ?>
                             </p>
                         </div>
                     <?php endif; ?>
                 </div>
 
                 <p class="submit">
-                    <input type="submit" name="confirm_import" value="<?php _e('Run Import Now', 'wpezimport'); ?>" class="button button-primary">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php _e('Cancel', 'wpezimport'); ?></a>
+                    <input type="submit" name="confirm_import" value="<?php esc_html_e('Run Import Now', 'ezimport-for-woocommerce'); ?>" class="button button-primary">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php esc_html_e('Cancel', 'ezimport-for-woocommerce'); ?></a>
                 </p>
             </form>
         </div>

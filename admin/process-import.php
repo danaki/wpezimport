@@ -15,7 +15,7 @@ require_once plugin_dir_path(__FILE__) . 'xml-parser.php';
  * Handle AJAX import process
  */
 function wpezimport_handle_import() {
-    error_log('Import process started');
+    wpezimport_debug_log('Import process started');
 
     // Check nonce
     if (!isset($_POST['wpezimport_import_nonce'])) {
@@ -119,7 +119,8 @@ function wpezimport_handle_import() {
         ), array('id' => $saved_import_id), array('%s', '%s', '%s', '%d', '%s'), array('%d'));
     } else {
         $inserted = $wpdb->insert($table, array(
-            'name'       => sprintf(__('Manual import %s', 'wpezimport'), current_time('Y-m-d H:i:s')),
+            /* translators: %s: date and time of the manual import. */
+            'name'       => sprintf(__('Manual import %s', 'ezimport-for-woocommerce'), current_time('Y-m-d H:i:s')),
             'type'       => 'file',
             'post_type'  => $post_type,
             'file_path'  => $file_path,
@@ -128,7 +129,7 @@ function wpezimport_handle_import() {
             'created_at' => current_time('mysql'),
         ), array('%s', '%s', '%s', '%s', '%d', '%s', '%s'));
         if (!$inserted) {
-            wp_send_json_error(array('message' => __('Failed to initialize import.', 'wpezimport')));
+            wp_send_json_error(array('message' => __('Failed to initialize import.', 'ezimport-for-woocommerce')));
             return;
         }
         $saved_import_id = (int) $wpdb->insert_id;
@@ -147,7 +148,7 @@ function wpezimport_handle_import() {
                     'fields'     => array(),
                     'resolution' => array(
                         'status'  => 'skipped',
-                        'message' => __('No unique identifier field configured', 'wpezimport'),
+                        'message' => __('No unique identifier field configured', 'ezimport-for-woocommerce'),
                         'title'   => $title !== '' ? $title : 'Item #' . ($i + 1),
                     ),
                     'id_resolution' => array('status' => 'not_configured', 'duplicate_found' => false, 'existing_post_id' => null),
@@ -242,7 +243,7 @@ function wpezimport_handle_import() {
         wpezimport_update_draft($draft_id, array('xpath_debug' => array()));
     }
 
-    error_log('Import process completed: ' . ($created + $updated) . ' of ' . $total . ' items imported');
+    wpezimport_debug_log('Import process completed: ' . ($created + $updated) . ' of ' . $total . ' items imported');
     wp_send_json_success($response);
 }
 
@@ -265,7 +266,7 @@ function wpezimport_process_taxonomy_terms($post_id, $terms_string, $taxonomy = 
     }
 
     if (!taxonomy_exists($taxonomy)) {
-        error_log('Taxonomy does not exist, skipping terms: ' . $taxonomy);
+        wpezimport_debug_log('Taxonomy does not exist, skipping terms: ' . $taxonomy);
         return array('terms' => array(), 'errors' => array('Taxonomy "' . $taxonomy . '" is not registered'));
     }
 
@@ -289,7 +290,7 @@ function wpezimport_process_taxonomy_terms($post_id, $terms_string, $taxonomy = 
             continue;
         }
 
-        error_log('Processing ' . $taxonomy . ' term: ' . $term);
+        wpezimport_debug_log('Processing ' . $taxonomy . ' term: ' . $term);
 
         // Look for existing term
         $existing_term = term_exists($term, $taxonomy);
@@ -297,12 +298,12 @@ function wpezimport_process_taxonomy_terms($post_id, $terms_string, $taxonomy = 
         if ($existing_term !== 0 && $existing_term !== null) {
             // Term exists, use it
             $term_id = (int) $existing_term['term_id'];
-            error_log('Found existing ' . $taxonomy . ' with ID: ' . $term_id);
+            wpezimport_debug_log('Found existing ' . $taxonomy . ' with ID: ' . $term_id);
         } else {
             // Term doesn't exist
             if ($match_existing_only) {
                 // Skip creating new term when match_existing_only is enabled
-                error_log('Skipping non-existent ' . $taxonomy . ': ' . $term . ' (match existing only mode)');
+                wpezimport_debug_log('Skipping non-existent ' . $taxonomy . ': ' . $term . ' (match existing only mode)');
                 continue;
             }
 
@@ -311,12 +312,12 @@ function wpezimport_process_taxonomy_terms($post_id, $terms_string, $taxonomy = 
 
             if (is_wp_error($new_term)) {
                 $errors[] = 'Failed to create ' . $taxonomy . ': ' . $term . ' - ' . $new_term->get_error_message();
-                error_log('Failed to create ' . $taxonomy . ': ' . $term . ' - ' . $new_term->get_error_message());
+                wpezimport_debug_log('Failed to create ' . $taxonomy . ': ' . $term . ' - ' . $new_term->get_error_message());
                 continue;
             }
 
             $term_id = $new_term['term_id'];
-            error_log('Created new ' . $taxonomy . ' with ID: ' . $term_id . ' for: ' . $term);
+            wpezimport_debug_log('Created new ' . $taxonomy . ' with ID: ' . $term_id . ' for: ' . $term);
         }
 
         // Add to term IDs array
@@ -329,9 +330,9 @@ function wpezimport_process_taxonomy_terms($post_id, $terms_string, $taxonomy = 
 
         if (is_wp_error($result)) {
             $errors[] = 'Failed to assign ' . $taxonomy . ' terms to post: ' . $result->get_error_message();
-            error_log('Failed to assign ' . $taxonomy . ' terms to post: ' . $result->get_error_message());
+            wpezimport_debug_log('Failed to assign ' . $taxonomy . ' terms to post: ' . $result->get_error_message());
         } else {
-            error_log('Successfully assigned ' . count($term_ids) . ' ' . $taxonomy . ' terms to post ' . $post_id);
+            wpezimport_debug_log('Successfully assigned ' . count($term_ids) . ' ' . $taxonomy . ' terms to post ' . $post_id);
         }
     }
 
@@ -368,14 +369,14 @@ function wpezimport_extract_image_urls_from_xpath($xml_item, $xpath_string) {
     if (!empty($xpath_matches[1])) {
         $debug_log[] = '=== XPath Evaluation Started ===';
         $debug_log[] = 'Found ' . count($xpath_matches[1]) . ' XPath expression(s) to evaluate';
-        error_log('=== XPath Evaluation Started ===');
-        error_log('Found ' . count($xpath_matches[1]) . ' XPath expression(s) to evaluate');
+        wpezimport_debug_log('=== XPath Evaluation Started ===');
+        wpezimport_debug_log('Found ' . count($xpath_matches[1]) . ' XPath expression(s) to evaluate');
 
         foreach ($xpath_matches[1] as $index => $xpath) {
             if (empty(trim($xpath))) continue;
 
             $debug_log[] = 'XPath #' . ($index + 1) . ': {' . $xpath . '}';
-            error_log('XPath #' . ($index + 1) . ': {' . $xpath . '}');
+            wpezimport_debug_log('XPath #' . ($index + 1) . ': {' . $xpath . '}');
 
             try {
                 // Evaluate the XPath expression against the XML item
@@ -383,7 +384,7 @@ function wpezimport_extract_image_urls_from_xpath($xml_item, $xpath_string) {
 
                 if ($result !== false && !empty($result)) {
                     $debug_log[] = '  ✓ Found ' . count($result) . ' result(s)';
-                    error_log('  ✓ Found ' . count($result) . ' result(s)');
+                    wpezimport_debug_log('  ✓ Found ' . count($result) . ' result(s)');
                     foreach ($result as $node_index => $node) {
                         $raw_url = trim((string)$node);
                         if (!empty($raw_url)) {
@@ -393,33 +394,33 @@ function wpezimport_extract_image_urls_from_xpath($xml_item, $xpath_string) {
                             $debug_log[] = '  Result #' . ($node_index + 1) . ': ' . $raw_url;
                             if ($encoded_url !== $raw_url) {
                                 $debug_log[] = '    → Encoded: ' . $encoded_url;
-                                error_log('  Result #' . ($node_index + 1) . ': ' . $raw_url . ' → ' . $encoded_url);
+                                wpezimport_debug_log('  Result #' . ($node_index + 1) . ': ' . $raw_url . ' → ' . $encoded_url);
                             } else {
-                                error_log('  Result #' . ($node_index + 1) . ': ' . $raw_url);
+                                wpezimport_debug_log('  Result #' . ($node_index + 1) . ': ' . $raw_url);
                             }
                         } else {
                             $debug_log[] = '  Result #' . ($node_index + 1) . ': (empty)';
-                            error_log('  Result #' . ($node_index + 1) . ': (empty)');
+                            wpezimport_debug_log('  Result #' . ($node_index + 1) . ': (empty)');
                         }
                     }
                 } else {
                     $debug_log[] = '  ✗ No results found';
-                    error_log('  ✗ No results found');
+                    wpezimport_debug_log('  ✗ No results found');
                 }
             } catch (Exception $e) {
                 $error_msg = 'Failed to evaluate XPath: ' . $xpath . ' - ' . $e->getMessage();
                 $errors[] = $error_msg;
                 $debug_log[] = '  ✗ ERROR: ' . $e->getMessage();
-                error_log('  ✗ ERROR: ' . $e->getMessage());
+                wpezimport_debug_log('  ✗ ERROR: ' . $e->getMessage());
             }
         }
 
         $debug_log[] = '=== XPath Evaluation Complete: ' . count($image_urls) . ' URL(s) extracted ===';
-        error_log('=== XPath Evaluation Complete: ' . count($image_urls) . ' URL(s) extracted ===');
+        wpezimport_debug_log('=== XPath Evaluation Complete: ' . count($image_urls) . ' URL(s) extracted ===');
     } else {
         // If no XPath expressions in curly braces, split by newlines/commas (not spaces - URLs may contain them) and assume direct URLs
         $debug_log[] = 'No XPath expressions found (no {} braces). Treating as direct URLs.';
-        error_log('No XPath expressions found (no {} braces). Treating as direct URLs.');
+        wpezimport_debug_log('No XPath expressions found (no {} braces). Treating as direct URLs.');
         $url_list = preg_split('/[\n\r,]+/', $xpath_string);
         foreach ($url_list as $raw_url) {
             $raw_url = trim($raw_url);
@@ -459,7 +460,7 @@ function wpezimport_resolve_image_patterns($image_urls, $xml_item, $draft_id) {
         return $image_urls;
     }
 
-    error_log('XPath expressions detected in image URLs. Attempting to evaluate.');
+    wpezimport_debug_log('XPath expressions detected in image URLs. Attempting to evaluate.');
 
     // Use provided XML item, or load from draft
     $current_xml_item = null;
@@ -469,7 +470,7 @@ function wpezimport_resolve_image_patterns($image_urls, $xml_item, $draft_id) {
         try {
             $current_xml_item = new SimpleXMLElement($xml_item);
         } catch (Exception $e) {
-            error_log('Failed to parse provided XML item: ' . $e->getMessage());
+            wpezimport_debug_log('Failed to parse provided XML item: ' . $e->getMessage());
         }
     } else {
         $current_draft = ($draft_id > 0) ? wpezimport_get_draft($draft_id) : false;
@@ -477,15 +478,15 @@ function wpezimport_resolve_image_patterns($image_urls, $xml_item, $draft_id) {
         if (isset($current_ds['current_item']) && !empty($current_ds['current_item'])) {
             try {
                 $current_xml_item = new SimpleXMLElement($current_ds['current_item']);
-                error_log('Successfully loaded XML item from draft for XPath evaluation');
+                wpezimport_debug_log('Successfully loaded XML item from draft for XPath evaluation');
             } catch (Exception $e) {
-                error_log('Failed to parse XML item from draft: ' . $e->getMessage());
+                wpezimport_debug_log('Failed to parse XML item from draft: ' . $e->getMessage());
             }
         }
     }
 
     if (!$current_xml_item) {
-        error_log('No XML item available for XPath evaluation. Clearing pattern.');
+        wpezimport_debug_log('No XML item available for XPath evaluation. Clearing pattern.');
         return '';
     }
 
@@ -502,16 +503,16 @@ function wpezimport_resolve_image_patterns($image_urls, $xml_item, $draft_id) {
 
     // Log any XPath evaluation errors
     foreach ($extracted_results['errors'] as $error) {
-        error_log('Image XPath error: ' . $error);
+        wpezimport_debug_log('Image XPath error: ' . $error);
     }
 
     if (!empty($extracted_results['urls'])) {
         $resolved = implode(' ', $extracted_results['urls']);
-        error_log('Successfully extracted ' . count($extracted_results['urls']) . ' image URLs from XPath expressions: ' . $resolved);
+        wpezimport_debug_log('Successfully extracted ' . count($extracted_results['urls']) . ' image URLs from XPath expressions: ' . $resolved);
         return $resolved;
     }
 
-    error_log('No image URLs were extracted from XPath expressions. Clearing pattern.');
+    wpezimport_debug_log('No image URLs were extracted from XPath expressions. Clearing pattern.');
     return '';
 }
 
@@ -547,8 +548,9 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
         if (!empty($head_content_type)) {
             $head_mime = strtolower(trim(explode(';', $head_content_type)[0]));
             if (!in_array($head_mime, $allowed_image_mimes)) {
-                error_log('Image HEAD rejected (MIME): ' . $head_mime . ' - ' . $image_url);
-                return new WP_Error('bad_mime', sprintf(__('Rejected: server reports non-image type (%s)', 'wpezimport'), $head_mime));
+                wpezimport_debug_log('Image HEAD rejected (MIME): ' . $head_mime . ' - ' . $image_url);
+                /* translators: %s: MIME type reported by the image server. */
+                return new WP_Error('bad_mime', sprintf(__('Rejected: server reports non-image type (%s)', 'ezimport-for-woocommerce'), $head_mime));
             }
         }
 
@@ -556,8 +558,9 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
         if (!empty($head_content_length) && intval($head_content_length) > $max_image_size) {
             $size_mb = round(intval($head_content_length) / (1024 * 1024), 1);
             $limit_mb = round($max_image_size / (1024 * 1024), 1);
-            error_log('Image HEAD rejected (size): ' . $head_content_length . ' bytes - ' . $image_url);
-            return new WP_Error('too_large', sprintf(__('Rejected: file too large (%s MB, limit %s MB)', 'wpezimport'), $size_mb, $limit_mb));
+            wpezimport_debug_log('Image HEAD rejected (size): ' . $head_content_length . ' bytes - ' . $image_url);
+            /* translators: 1: image size in MB, 2: allowed size in MB. */
+            return new WP_Error('too_large', sprintf(__('Rejected: file too large (%1$s MB, limit %2$s MB)', 'ezimport-for-woocommerce'), $size_mb, $limit_mb));
         }
     }
     // If HEAD fails, proceed to GET anyway (some servers don't support HEAD)
@@ -569,14 +572,14 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
     ));
 
     if (is_wp_error($response)) {
-        error_log('Failed to download image: ' . $image_url . ' - ' . $response->get_error_message());
+        wpezimport_debug_log('Failed to download image: ' . $image_url . ' - ' . $response->get_error_message());
         return $response;
     }
 
     $response_code = wp_remote_retrieve_response_code($response);
     $image_data = wp_remote_retrieve_body($response);
     if (empty($image_data)) {
-        error_log('Empty image data from URL: ' . $image_url);
+        wpezimport_debug_log('Empty image data from URL: ' . $image_url);
         return new WP_Error('empty_body', 'Empty response (HTTP ' . $response_code . ')');
     }
 
@@ -584,8 +587,9 @@ function wpezimport_download_image($image_url, $allowed_image_mimes, $max_image_
     if (strlen($image_data) > $max_image_size) {
         $size_mb = round(strlen($image_data) / (1024 * 1024), 1);
         $limit_mb = round($max_image_size / (1024 * 1024), 1);
-        error_log('Image rejected (download size): ' . strlen($image_data) . ' bytes - ' . $image_url);
-        return new WP_Error('too_large', sprintf(__('Rejected: downloaded file too large (%s MB, limit %s MB)', 'wpezimport'), $size_mb, $limit_mb));
+        wpezimport_debug_log('Image rejected (download size): ' . strlen($image_data) . ' bytes - ' . $image_url);
+        /* translators: 1: downloaded image size in MB, 2: allowed size in MB. */
+        return new WP_Error('too_large', sprintf(__('Rejected: downloaded file too large (%1$s MB, limit %2$s MB)', 'ezimport-for-woocommerce'), $size_mb, $limit_mb));
     }
 
     return array('data' => $image_data, 'response' => $response, 'code' => $response_code);
@@ -627,7 +631,7 @@ function wpezimport_detect_image_extension($response, $image_url, $image_data) {
 
     // 2. URL path extension
     if (empty($extension)) {
-        $url_extension = strtolower(pathinfo(parse_url($image_url, PHP_URL_PATH), PATHINFO_EXTENSION));
+        $url_extension = strtolower(pathinfo((string) wp_parse_url($image_url, PHP_URL_PATH), PATHINFO_EXTENSION));
         if (in_array($url_extension, $valid_image_extensions)) {
             $extension = $url_extension;
         }
@@ -660,11 +664,11 @@ function wpezimport_generate_image_filename($image_url, $extension, $base_filena
         return $base_filename . '-' . ($index + 1) . '.' . $extension;
     }
 
-    $url_filename = basename(parse_url($image_url, PHP_URL_PATH));
+    $url_filename = basename((string) wp_parse_url($image_url, PHP_URL_PATH));
     $url_filename = pathinfo($url_filename, PATHINFO_FILENAME);
 
     if (empty($url_filename) || $url_filename === 'index') {
-        return 'image-' . time() . '-' . mt_rand(1000, 9999) . '.' . $extension;
+        return 'image-' . time() . '-' . wp_rand(1000, 9999) . '.' . $extension;
     }
 
     return $url_filename . '.' . $extension;
@@ -786,7 +790,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
     // (which we later URL-encode to %20).
     $image_url_list = preg_split('/[\r\n,;]+/', $image_urls, -1, PREG_SPLIT_NO_EMPTY);
 
-    error_log('Processing images - count: ' . count($image_url_list));
+    wpezimport_debug_log('Processing images - count: ' . count($image_url_list));
 
     // Sanitize post title for filename generation
     $base_filename = '';
@@ -804,12 +808,12 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
             continue;
         }
 
-        error_log('Processing image URL (original): ' . $image_url);
+        wpezimport_debug_log('Processing image URL (original): ' . $image_url);
 
         // Normalize: decode HTML entities, then percent-encode (UrlEncoder handles
         // scheme/host/path/query/fragment including fallback encoding)
         list($original_url, $image_url) = wpezimport_normalize_image_url($image_url);
-        error_log('Processing image URL (encoded): ' . $image_url);
+        wpezimport_debug_log('Processing image URL (encoded): ' . $image_url);
 
         // Check if this image URL has already been downloaded in a previous import
         $cache = wpezimport_find_cached_image($image_url, $post_id, $existing_attachment_ids);
@@ -824,7 +828,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'cached',
-                'message' => __('Already attached to this post', 'wpezimport'),
+                'message' => __('Already attached to this post', 'ezimport-for-woocommerce'),
                 'attachment_id' => $existing_attach_id
             );
 
@@ -886,11 +890,12 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
         // Final validation: reject if we couldn't determine a valid image extension
         if (empty($extension)) {
             $error_msg = sprintf(
-                __('Rejected: not a recognized image type (detected: %s)', 'wpezimport'),
-                $detected_mime ?: __('unknown', 'wpezimport')
+                /* translators: %s: detected MIME type of the rejected image. */
+                __('Rejected: not a recognized image type (detected: %s)', 'ezimport-for-woocommerce'),
+                $detected_mime ?: __('unknown', 'ezimport-for-woocommerce')
             );
             $errors[] = $error_msg . ' - ' . $image_url;
-            error_log('Image rejected (not an image): detected=' . $detected_mime . ' - ' . $image_url);
+            wpezimport_debug_log('Image rejected (not an image): detected=' . $detected_mime . ' - ' . $image_url);
             $image_statuses[] = array(
                 'url' => $original_url,
                 'encoded_url' => $image_url,
@@ -912,12 +917,12 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
         $result = file_put_contents($file_path, $image_data);
         if ($result === false) {
             $errors[] = 'Failed to save image: ' . $file_path;
-            error_log('Failed to save image: ' . $file_path);
+            wpezimport_debug_log('Failed to save image: ' . $file_path);
             $image_statuses[] = array(
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'error',
-                'message' => __('Failed to save file to disk', 'wpezimport')
+                'message' => __('Failed to save file to disk', 'ezimport-for-woocommerce')
             );
             continue;
         }
@@ -939,12 +944,12 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
         if (is_wp_error($attach_id)) {
             $error_msg = $attach_id->get_error_message();
             $errors[] = 'Failed to create attachment: ' . $error_msg;
-            error_log('Failed to create attachment: ' . $error_msg);
+            wpezimport_debug_log('Failed to create attachment: ' . $error_msg);
             $image_statuses[] = array(
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'error',
-                'message' => __('Failed to create attachment: ', 'wpezimport') . $error_msg
+                'message' => __('Failed to create attachment: ', 'ezimport-for-woocommerce') . $error_msg
             );
             continue;
         }
@@ -974,7 +979,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
         );
 
         $processed_urls[] = $image_url;
-        error_log('Image successfully attached. ID: ' . $attach_id);
+        wpezimport_debug_log('Image successfully attached. ID: ' . $attach_id);
 
         // Add status for this successfully processed image
         if (isset($current_image_status)) {
@@ -987,7 +992,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 'url' => $original_url,
                 'encoded_url' => $image_url,
                 'status' => 'cached',
-                'message' => __('Copied from existing attachment', 'wpezimport'),
+                'message' => __('Copied from existing attachment', 'ezimport-for-woocommerce'),
                 'attachment_id' => $attach_id
             );
         }
@@ -1006,7 +1011,7 @@ function wpezimport_process_images($post_id, $image_urls, $post_title = '', $opt
                 array('%d')
             );
 
-            error_log('Deleted removed attachment ID: ' . $attach_id);
+            wpezimport_debug_log('Deleted removed attachment ID: ' . $attach_id);
         }
     }
 
@@ -1061,6 +1066,6 @@ function wpezimport_get_spreadsheet_reader($ext, $delimiter = ',', $enclosure = 
             $reader->setSheetIndex(0);
             return $reader;
         default:
-            throw new Exception('Unsupported file format: ' . $ext);
+            throw new Exception('Unsupported file format: ' . esc_html($ext));
     }
 }

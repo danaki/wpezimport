@@ -53,7 +53,7 @@ if ($edit_import_id > 0 && $draft_id === 0) {
         if ($import->type === 'file' && !empty($import->file_path)) {
             add_action('admin_notices', function() {
                 echo '<div class="notice notice-warning">';
-                echo '<p>' . __('You are editing a saved file import. Please note that you must upload a file again when you run this import.', 'wpezimport') . '</p>';
+                echo '<p>' . esc_html__('You are editing a saved file import. Please note that you must upload a file again when you run this import.', 'ezimport-for-woocommerce') . '</p>';
                 echo '</div>';
             });
         }
@@ -120,8 +120,8 @@ if (!$uploaded_file && !$editing_import && !$has_url_import) {
 
 // WordPress default post fields
 $wp_fields = array(
-    'post_title' => __('Post Title', 'wpezimport'),
-    'post_content' => __('Post Content', 'wpezimport'),
+    'post_title' => __('Post Title', 'ezimport-for-woocommerce'),
+    'post_content' => __('Post Content', 'ezimport-for-woocommerce'),
 );
 
 // Get available post types
@@ -178,18 +178,18 @@ if ($is_xml) {
                 // Corrected call: $node, $base_xpath (empty for sample root), $is_root (true for sample root), $depth (0 for initial)
                 $xml_sample = wpezimport_process_xml_node($simplexml_sample, '', true, 0);
             } else {
-                $xml_sample = '<p class="wpezimport-error">' . __('Error loading XML sample data for display. The sample may be malformed.', 'wpezimport') . '</p>';
-                error_log('WPezImport: Failed to load XML sample string for display. Index: ' . $current_sample_index . '. Raw string: ' . substr($raw_sample_string, 0, 200));
+                $xml_sample = '<p class="wpezimport-error">' . __('Error loading XML sample data for display. The sample may be malformed.', 'ezimport-for-woocommerce') . '</p>';
+                wpezimport_debug_log('WPezImport: Failed to load XML sample string for display. Index: ' . $current_sample_index . '. Raw string: ' . substr($raw_sample_string, 0, 200));
             }
         } else {
             // $is_xml is true, draft xml_samples is set and is an array, but it's empty.
-            $xml_sample = '<p>' . __('No XML samples were extracted. Please check your XML file and selection.', 'wpezimport') . '</p>';
+            $xml_sample = '<p>' . __('No XML samples were extracted. Please check your XML file and selection.', 'ezimport-for-woocommerce') . '</p>';
         }
     } elseif (isset($ds['uploaded_file'])) { // $is_xml true, but samples not in draft implies issue in Step 1
-        $xml_sample = '<p class="wpezimport-error">' . __('XML import type detected, but no XML samples found. Please re-upload your file and complete Step 1 selection.', 'wpezimport') . '</p>';
+        $xml_sample = '<p class="wpezimport-error">' . __('XML import type detected, but no XML samples found. Please re-upload your file and complete Step 1 selection.', 'ezimport-for-woocommerce') . '</p>';
     } else {
         // $is_xml true, but no uploaded file session variable; very unlikely state here, means direct navigation to step 2 without upload
-        $xml_sample = '<p class="wpezimport-error">' . __('Cannot display XML samples. No file uploaded or session expired. Please start from Step 1.', 'wpezimport') . '</p>';
+        $xml_sample = '<p class="wpezimport-error">' . __('Cannot display XML samples. No file uploaded or session expired. Please start from Step 1.', 'ezimport-for-woocommerce') . '</p>';
     }
 }
 
@@ -205,7 +205,7 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
 <div class="wrap wpezimport-admin-container">
     <h1>
     <?php if ($editing_import): ?>
-        <?php _e('Edit Import', 'wpezimport'); ?>
+        <?php esc_html_e('Edit Import', 'ezimport-for-woocommerce'); ?>
     <?php else: ?>
         <?php echo esc_html(get_admin_page_title()); ?>
     <?php endif; ?>
@@ -213,17 +213,17 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
 
     <?php if ($editing_import && isset($import)): ?>
     <div class="wpezimport-import-info-box">
-        <h3><?php _e('Import Source', 'wpezimport'); ?></h3>
+        <h3><?php esc_html_e('Import Source', 'ezimport-for-woocommerce'); ?></h3>
 
         <table class="wpezimport-info-table">
             <?php if ($import->type === 'url' && !empty($import->url)): ?>
             <tr>
-                <th><?php _e('Data Source URL:', 'wpezimport'); ?></th>
+                <th><?php esc_html_e('Data Source URL:', 'ezimport-for-woocommerce'); ?></th>
                 <td><code><?php echo esc_html($import->url); ?></code></td>
             </tr>
             <?php elseif ($import->type === 'file' && !empty($import->file_path)): ?>
             <tr>
-                <th><?php _e('File:', 'wpezimport'); ?></th>
+                <th><?php esc_html_e('File:', 'ezimport-for-woocommerce'); ?></th>
                 <td><code><?php echo esc_html(basename($import->file_path)); ?></code></td>
             </tr>
             <?php endif; ?>
@@ -238,7 +238,7 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
             if (!empty($saved_xpath)):
             ?>
             <tr>
-                <th><?php _e('XML Item Path:', 'wpezimport'); ?></th>
+                <th><?php esc_html_e('XML Item Path:', 'ezimport-for-woocommerce'); ?></th>
                 <td><code><?php echo esc_html($saved_xpath); ?></code></td>
             </tr>
             <?php endif; ?>
@@ -249,10 +249,10 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
     <?php if (!empty($url_fetch_error)): ?>
     <div class="notice notice-error">
         <p>
-            <strong><?php _e('Could not fetch XML from URL:', 'wpezimport'); ?></strong>
+            <strong><?php esc_html_e('Could not fetch XML from URL:', 'ezimport-for-woocommerce'); ?></strong>
             <?php echo esc_html($url_fetch_error); ?>
         </p>
-        <p><?php _e('You can still edit the mapping below. Use the "Refetch XML" button in the XML Structure panel to retry.', 'wpezimport'); ?></p>
+        <p><?php esc_html_e('You can still edit the mapping below. Use the "Refetch XML" button in the XML Structure panel to retry.', 'ezimport-for-woocommerce'); ?></p>
     </div>
     <?php endif; ?>
 
@@ -264,7 +264,7 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
             <div class="wpezimport-mapping-layout">
                 <div class="wpezimport-mapping-target">
                     <div class="wpezimport-field-group">
-                        <h4><?php _e('Drag & drop any element on the right to set field content.', 'wpezimport'); ?></h4>
+                        <h4><?php esc_html_e('Drag & drop any element on the right to set field content.', 'ezimport-for-woocommerce'); ?></h4>
 
 
                         <?php
@@ -284,11 +284,11 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                         };
                         ?>
                         <div class="wpezimport-update-column-header">
-                            <span><?php _e('Update?', 'wpezimport'); ?></span>
+                            <span><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></span>
                         </div>
-                        <p class="description"><?php _e('This field will be used to identify if an item already exists in WordPress during import.', 'wpezimport'); ?></p>
+                        <p class="description"><?php esc_html_e('This field will be used to identify if an item already exists in WordPress during import.', 'ezimport-for-woocommerce'); ?></p>
                         <div class="wpezimport-field-mapping-row">
-                            <label for="unique_identifier_source"><?php _e('Unique Identifier Source', 'wpezimport'); ?></label>
+                            <label for="unique_identifier_source"><?php esc_html_e('Unique Identifier Source', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $unique_identifier_value = '';
@@ -299,14 +299,14 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $unique_identifier_value = esc_attr($ds['import_options']['unique_identifier_source']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[unique_identifier_source]" id="unique_identifier_source" class="regular-text wpezimport-field-pattern" value="<?php echo $unique_identifier_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[unique_identifier_source]" id="unique_identifier_source" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($unique_identifier_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="post_title"><?php _e('Title', 'wpezimport'); ?></label>
+                            <label for="post_title"><?php esc_html_e('Title', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $post_title_value = '';
@@ -314,16 +314,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $post_title_value = esc_attr($ds['field_mapping']['post_title']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[post_title]" id="post_title" class="regular-text wpezimport-field-pattern" value="<?php echo $post_title_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[post_title]" id="post_title" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($post_title_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[post_title]" id="update_post_title" value="1" <?php checked($get_update_flag('post_title')); ?>>
-                                <label for="update_post_title"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update_post_title"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="post_content"><?php _e('Description', 'wpezimport'); ?></label>
+                            <label for="post_content"><?php esc_html_e('Description', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $post_content_value = '';
@@ -331,16 +331,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $post_content_value = esc_attr($ds['field_mapping']['post_content']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[post_content]" id="post_content" class="regular-text wpezimport-field-pattern" value="<?php echo $post_content_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[post_content]" id="post_content" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($post_content_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[post_content]" id="update_post_content" value="1" <?php checked($get_update_flag('post_content')); ?>>
-                                <label for="update_post_content"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update_post_content"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="post_brand"><?php _e('Brand', 'wpezimport'); ?></label>
+                            <label for="post_brand"><?php esc_html_e('Brand', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $brand_value = '';
@@ -348,16 +348,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $brand_value = esc_attr($ds['field_mapping']['post_brand']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[post_brand]" id="post_brand" class="regular-text wpezimport-field-pattern" value="<?php echo $brand_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[post_brand]" id="post_brand" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($brand_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[post_brand]" id="update_post_brand" value="1" <?php checked($get_update_flag('post_brand')); ?>>
-                                <label for="update_post_brand"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update_post_brand"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_sku"><?php _e('Code/Part number (SKU)', 'wpezimport'); ?></label>
+                            <label for="_sku"><?php esc_html_e('Code/Part number (SKU)', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $sku_value = '';
@@ -365,16 +365,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $sku_value = esc_attr($ds['field_mapping']['_sku']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_sku]" id="_sku" class="regular-text wpezimport-field-pattern" value="<?php echo $sku_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_sku]" id="_sku" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($sku_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_sku]" id="update__sku" value="1" <?php checked($get_update_flag('_sku')); ?>>
-                                <label for="update__sku"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__sku"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_global_unique_id"><?php _e('GTIN, UPC, EAN, or ISBN', 'wpezimport'); ?></label>
+                            <label for="_global_unique_id"><?php esc_html_e('GTIN, UPC, EAN, or ISBN', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $gtin_value = '';
@@ -382,16 +382,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $gtin_value = esc_attr($ds['field_mapping']['_global_unique_id']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_global_unique_id]" id="_global_unique_id" class="regular-text wpezimport-field-pattern" value="<?php echo $gtin_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_global_unique_id]" id="_global_unique_id" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($gtin_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_global_unique_id]" id="update__global_unique_id" value="1" <?php checked($get_update_flag('_global_unique_id')); ?>>
-                                <label for="update__global_unique_id"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__global_unique_id"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_regular_price"><?php _e('Regular price', 'wpezimport'); ?></label>
+                            <label for="_regular_price"><?php esc_html_e('Regular price', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $regular_price_value = '';
@@ -399,15 +399,15 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $regular_price_value = esc_attr($ds['field_mapping']['_regular_price']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_regular_price]" id="_regular_price" class="regular-text wpezimport-field-pattern" value="<?php echo $regular_price_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_regular_price]" id="_regular_price" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($regular_price_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_regular_price]" id="update__regular_price" value="1" <?php checked($get_update_flag('_regular_price')); ?>>
-                                <label for="update__regular_price"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__regular_price"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_sale_price"><?php _e('Sale price', 'wpezimport'); ?></label>
+                            <label for="_sale_price"><?php esc_html_e('Sale price', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $sale_price_value = '';
@@ -415,16 +415,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $sale_price_value = esc_attr($ds['field_mapping']['_sale_price']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_sale_price]" id="_sale_price" class="regular-text wpezimport-field-pattern" value="<?php echo $sale_price_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_sale_price]" id="_sale_price" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($sale_price_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_sale_price]" id="update__sale_price" value="1" <?php checked($get_update_flag('_sale_price')); ?>>
-                                <label for="update__sale_price"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__sale_price"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_stock"><?php _e('Stock quantity', 'wpezimport'); ?></label>
+                            <label for="_stock"><?php esc_html_e('Stock quantity', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $stock_value = '';
@@ -432,16 +432,16 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $stock_value = esc_attr($ds['field_mapping']['_stock']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_stock]" id="_stock" class="regular-text wpezimport-field-pattern" value="<?php echo $stock_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_stock]" id="_stock" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($stock_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_stock]" id="update__stock" value="1" <?php checked($get_update_flag('_stock')); ?>>
-                                <label for="update__stock"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__stock"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
 
                         <div class="wpezimport-field-mapping-row">
-                            <label for="_weight"><?php _e('Weight', 'wpezimport'); ?></label>
+                            <label for="_weight"><?php esc_html_e('Weight', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $weight_value = '';
@@ -453,7 +453,7 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $weight_unit = esc_attr($ds['import_options']['mapping_units']['_weight']);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[_weight]" id="_weight" class="regular-text wpezimport-field-pattern" value="<?php echo $weight_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[_weight]" id="_weight" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($weight_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                                 <select name="field_mapping_units[_weight]" id="_weight_unit">
                                     <option value="kg" <?php selected($weight_unit, 'kg'); ?>>kg</option>
                                     <option value="g" <?php selected($weight_unit, 'g'); ?>>g</option>
@@ -461,11 +461,11 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_weight]" id="update__weight" value="1" <?php checked($get_update_flag('_weight')); ?>>
-                                <label for="update__weight"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__weight"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
                         <div class="wpezimport-field-mapping-row">
-                            <label for="product_length"><?php _e('Dimensions', 'wpezimport'); ?></label>
+                            <label for="product_length"><?php esc_html_e('Dimensions', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container wpezimport-dimensions-wrap">
                                 <?php
                                 $length_value = isset($ds['field_mapping']['_length']) ? esc_attr($ds['field_mapping']['_length']) : '';
@@ -476,9 +476,9 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $dimension_unit = esc_attr($ds['import_options']['mapping_units']['_length']);
                                 }
                                 ?>
-                                <input id="product_length" placeholder="<?php _e('Length', 'wpezimport'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_length]" value="<?php echo $length_value; ?>" />
-                                <input id="product_width" placeholder="<?php _e('Width', 'wpezimport'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_width]" value="<?php echo $width_value; ?>" />
-                                <input id="product_height" placeholder="<?php _e('Height', 'wpezimport'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_height]" value="<?php echo $height_value; ?>" />
+                                <input id="product_length" placeholder="<?php esc_html_e('Length', 'ezimport-for-woocommerce'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_length]" value="<?php echo esc_attr($length_value); ?>" />
+                                <input id="product_width" placeholder="<?php esc_html_e('Width', 'ezimport-for-woocommerce'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_width]" value="<?php echo esc_attr($width_value); ?>" />
+                                <input id="product_height" placeholder="<?php esc_html_e('Height', 'ezimport-for-woocommerce'); ?>" class="wpezimport-field-pattern" type="text" name="field_mapping[_height]" value="<?php echo esc_attr($height_value); ?>" />
                                 <select name="field_mapping_units[_dimensions]" id="_dimensions_unit">
                                     <option value="m" <?php selected($dimension_unit, 'm'); ?>>m</option>
                                     <option value="cm" <?php selected($dimension_unit, 'cm'); ?>>cm</option>
@@ -487,17 +487,17 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[_dimensions]" id="update__dimensions" value="1" <?php checked($get_update_flag('_dimensions')); ?>>
-                                <label for="update__dimensions"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update__dimensions"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
                     </div>
 
                     <div class="wpezimport-field-group">
-                        <h4><?php _e('Product Images', 'wpezimport'); ?></h4>
-                        <p class="description"><?php _e('The first successfully downloaded image becomes the featured image.', 'wpezimport'); ?></p>
+                        <h4><?php esc_html_e('Product Images', 'ezimport-for-woocommerce'); ?></h4>
+                        <p class="description"><?php esc_html_e('The first successfully downloaded image becomes the featured image.', 'ezimport-for-woocommerce'); ?></p>
                         <?php for ($i = 1; $i <= 4; $i++): ?>
                         <div class="wpezimport-field-mapping-row">
-                            <label for="image_url_<?php echo $i; ?>"><?php printf(__('Image %d', 'wpezimport'), $i); ?></label>
+                            <label for="image_url_<?php echo absint($i); ?>"><?php /* translators: %d: image field number. */ printf(esc_html__('Image %d', 'ezimport-for-woocommerce'), absint($i)); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $image_value = '';
@@ -505,21 +505,21 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                     $image_value = esc_attr($ds['field_mapping']['image_url_' . $i]);
                                 }
                                 ?>
-                                <input type="text" name="field_mapping[image_url_<?php echo $i; ?>]" id="image_url_<?php echo $i; ?>" class="regular-text wpezimport-field-pattern" value="<?php echo $image_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[image_url_<?php echo absint($i); ?>]" id="image_url_<?php echo absint($i); ?>" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($image_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
-                                <input type="checkbox" name="update_flags[image_url_<?php echo $i; ?>]" id="update_image_url_<?php echo $i; ?>" value="1" <?php checked($get_update_flag('image_url_' . $i)); ?>>
-                                <label for="update_image_url_<?php echo $i; ?>"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <input type="checkbox" name="update_flags[image_url_<?php echo absint($i); ?>]" id="update_image_url_<?php echo absint($i); ?>" value="1" <?php checked($get_update_flag('image_url_' . $i)); ?>>
+                                <label for="update_image_url_<?php echo absint($i); ?>"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
                         <?php endfor; ?>
                     </div>
 
                     <div class="wpezimport-field-group">
-                        <h4><?php _e('Category', 'wpezimport'); ?></h4>
-                        <p class="description"><?php _e('Map XML path for product category.', 'wpezimport'); ?></p>
+                        <h4><?php esc_html_e('Category', 'ezimport-for-woocommerce'); ?></h4>
+                        <p class="description"><?php esc_html_e('Map XML path for product category.', 'ezimport-for-woocommerce'); ?></p>
                         <div class="wpezimport-field-mapping-row">
-                            <label for="post_categories"><?php _e('Category', 'wpezimport'); ?></label>
+                            <label for="post_categories"><?php esc_html_e('Category', 'ezimport-for-woocommerce'); ?></label>
                             <div class="wpezimport-field-input-container">
                                 <?php
                                 $category_value = '';
@@ -528,17 +528,17 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                 }
                                 $categories_match_existing = isset($ds['import_options']['categories_match_existing']) ? $ds['import_options']['categories_match_existing'] : '';
                                 ?>
-                                <input type="text" name="field_mapping[post_categories]" id="post_categories" class="regular-text wpezimport-field-pattern" value="<?php echo $category_value; ?>" placeholder="<?php _e('Drag a column here', 'wpezimport'); ?>">
+                                <input type="text" name="field_mapping[post_categories]" id="post_categories" class="regular-text wpezimport-field-pattern" value="<?php echo esc_attr($category_value); ?>" placeholder="<?php esc_html_e('Drag a column here', 'ezimport-for-woocommerce'); ?>">
                             </div>
                             <div class="wpezimport-update-checkbox">
                                 <input type="checkbox" name="update_flags[post_categories]" id="update_post_categories" value="1" <?php checked($get_update_flag('post_categories')); ?>>
-                                <label for="update_post_categories"><?php _e('Update?', 'wpezimport'); ?></label>
+                                <label for="update_post_categories"><?php esc_html_e('Update?', 'ezimport-for-woocommerce'); ?></label>
                             </div>
                         </div>
                         <div class="form-field wpezimport-form-field-mt">
                             <label>
                                 <input type="checkbox" name="import_options[categories_match_existing]" value="yes" <?php checked($categories_match_existing, 'yes'); ?> />
-                                <?php _e('Only match existing categories (do not create new ones)', 'wpezimport'); ?>
+                                <?php esc_html_e('Only match existing categories (do not create new ones)', 'ezimport-for-woocommerce'); ?>
                             </label>
                         </div>
                     </div>
@@ -547,23 +547,23 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                     <div class="wpezimport-collapsible-section">
                         <div class="wpezimport-collapsible-header" onclick="this.parentElement.classList.toggle('expanded')">
                             <span class="dashicons dashicons-arrow-right-alt2"></span>
-                            <h4><?php _e('Import Options', 'wpezimport'); ?></h4>
-                            <span class="wpezimport-collapsible-hint"><?php _e('Post status, author & more', 'wpezimport'); ?></span>
+                            <h4><?php esc_html_e('Import Options', 'ezimport-for-woocommerce'); ?></h4>
+                            <span class="wpezimport-collapsible-hint"><?php esc_html_e('Post status, author & more', 'ezimport-for-woocommerce'); ?></span>
                         </div>
                         <div class="wpezimport-collapsible-content">
                             <input type="hidden" name="import_options[default_post_type]" value="product">
 
                             <div class="wpezimport-option-row">
-                                <label for="default_post_status"><?php _e('Default Post Status', 'wpezimport'); ?></label>
+                                <label for="default_post_status"><?php esc_html_e('Default Post Status', 'ezimport-for-woocommerce'); ?></label>
                                 <select name="import_options[default_post_status]" id="default_post_status">
-                                    <option value="publish"><?php _e('Published', 'wpezimport'); ?></option>
-                                    <option value="draft" selected><?php _e('Draft', 'wpezimport'); ?></option>
-                                    <option value="pending"><?php _e('Pending', 'wpezimport'); ?></option>
+                                    <option value="publish"><?php esc_html_e('Published', 'ezimport-for-woocommerce'); ?></option>
+                                    <option value="draft" selected><?php esc_html_e('Draft', 'ezimport-for-woocommerce'); ?></option>
+                                    <option value="pending"><?php esc_html_e('Pending', 'ezimport-for-woocommerce'); ?></option>
                                 </select>
                             </div>
 
                             <div class="wpezimport-option-row">
-                                <label for="default_author"><?php _e('Default Author', 'wpezimport'); ?></label>
+                                <label for="default_author"><?php esc_html_e('Default Author', 'ezimport-for-woocommerce'); ?></label>
                                 <select name="import_options[default_author]" id="default_author">
                                     <?php
                                     $users = get_users(array('role__in' => array('administrator', 'editor', 'author')));
@@ -578,9 +578,9 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                             <div class="wpezimport-option-row">
                                 <label for="skip_first_row">
                                     <input type="checkbox" name="import_options[skip_first_row]" id="skip_first_row" value="1" checked>
-                                    <?php _e('Skip First Row', 'wpezimport'); ?>
+                                    <?php esc_html_e('Skip First Row', 'ezimport-for-woocommerce'); ?>
                                 </label>
-                                <p class="description"><?php _e('If enabled, the first row of data will be skipped (assumes it contains headers).', 'wpezimport'); ?></p>
+                                <p class="description"><?php esc_html_e('If enabled, the first row of data will be skipped (assumes it contains headers).', 'ezimport-for-woocommerce'); ?></p>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -593,15 +593,15 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                 <div class="wpezimport-mapping-source">
                     <!-- XML Sample Display -->
                     <div class="wpezimport-xml-sample">
-                        <h3><?php _e('XML Structure', 'wpezimport'); ?></h3>
-                        <p class="description"><?php _e('Drag elements to map them to WordPress fields.', 'wpezimport'); ?></p>
+                        <h3><?php esc_html_e('XML Structure', 'ezimport-for-woocommerce'); ?></h3>
+                        <p class="description"><?php esc_html_e('Drag elements to map them to WordPress fields.', 'ezimport-for-woocommerce'); ?></p>
                         <?php if ($has_url_import): ?>
                         <div class="wpezimport-refetch-bar" style="margin-bottom: 10px;">
                             <button type="button" class="button button-small" id="wpezimport-refetch-xml"
                                 data-url="<?php echo esc_attr(isset($ds['import_url']) ? $ds['import_url'] : ''); ?>"
                                 data-xpath="<?php echo esc_attr($item_xpath); ?>">
                                 <span class="dashicons dashicons-update"></span>
-                                <?php _e('Refetch XML', 'wpezimport'); ?>
+                                <?php esc_html_e('Refetch XML', 'ezimport-for-woocommerce'); ?>
                             </button>
                             <span id="wpezimport-refetch-status" style="margin-left: 8px;"></span>
                         </div>
@@ -612,7 +612,7 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                 <span class="dashicons dashicons-arrow-left-alt"></span>
                             </button>
                             <span class="wpezimport-product-counter">
-                                <?php echo sprintf(__('Sample %d of %d', 'wpezimport'), $current_sample_index + 1, $total_samples); ?>
+                                <?php /* translators: 1: current XML sample number, 2: total XML samples. */ printf(esc_html__('Sample %1$d of %2$d', 'ezimport-for-woocommerce'), absint($current_sample_index + 1), absint($total_samples)); ?>
                             </span>
                             <button type="button" class="button button-small" id="wpezimport-next-xml-sample" <?php if ($current_sample_index >= $total_samples - 1) echo 'disabled'; ?>>
                                 <span class="dashicons dashicons-arrow-right-alt"></span>
@@ -621,12 +621,12 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                         <?php endif; ?>
                         <div class="wpezimport-xml-structure" id="wpezimport-xml-structure">
                             <?php if ($is_xml): ?>
-                                <?php echo $xml_sample; ?>
+                                <?php echo wp_kses_post($xml_sample); ?>
                             <?php elseif (!empty($url_fetch_error)): ?>
                                 <p class="wpezimport-error"><?php echo esc_html($url_fetch_error); ?></p>
-                                <p><?php _e('Click "Refetch XML" above to retry.', 'wpezimport'); ?></p>
+                                <p><?php esc_html_e('Click "Refetch XML" above to retry.', 'ezimport-for-woocommerce'); ?></p>
                             <?php else: ?>
-                                <p><?php _e('No XML data loaded. Click "Refetch XML" to load the structure from the URL.', 'wpezimport'); ?></p>
+                                <p><?php esc_html_e('No XML data loaded. Click "Refetch XML" to load the structure from the URL.', 'ezimport-for-woocommerce'); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -635,10 +635,10 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                 <div class="wpezimport-mapping-source">
                     <!-- CSV/Excel Columns Display -->
                     <div class="wpezimport-csv-columns">
-                        <h3><?php _e('File Columns', 'wpezimport'); ?></h3>
-                        <p class="description"><?php _e('Drag columns to map them to WordPress fields.', 'wpezimport'); ?></p>
+                        <h3><?php esc_html_e('File Columns', 'ezimport-for-woocommerce'); ?></h3>
+                        <p class="description"><?php esc_html_e('Drag columns to map them to WordPress fields.', 'ezimport-for-woocommerce'); ?></p>
                         <?php if (!empty($file_headers)): ?>
-                        <input type="search" id="wpezimport-column-search" class="regular-text" placeholder="<?php esc_attr_e('Search columns...', 'wpezimport'); ?>" style="margin-bottom:8px;width:100%;">
+                        <input type="search" id="wpezimport-column-search" class="regular-text" placeholder="<?php esc_attr_e('Search columns...', 'ezimport-for-woocommerce'); ?>" style="margin-bottom:8px;width:100%;">
                         <?php endif; ?>
                         <div class="wpezimport-columns-list">
                             <?php if (!empty($file_headers)): ?>
@@ -650,12 +650,12 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <div class="wpezimport-reupload-section">
-                                    <p class="wpezimport-notice"><?php _e('The original file is no longer available. Please re-upload your file to load the columns.', 'wpezimport'); ?></p>
+                                    <p class="wpezimport-notice"><?php esc_html_e('The original file is no longer available. Please re-upload your file to load the columns.', 'ezimport-for-woocommerce'); ?></p>
                                     <div class="wpezimport-reupload-control">
                                         <input type="file" id="wpezimport-reupload-file" accept=".csv,.xls,.xlsx" />
                                         <button type="button" class="button" id="wpezimport-reupload-btn">
                                             <span class="dashicons dashicons-upload"></span>
-                                            <?php _e('Upload File', 'wpezimport'); ?>
+                                            <?php esc_html_e('Upload File', 'ezimport-for-woocommerce'); ?>
                                         </button>
                                         <div id="wpezimport-reupload-loader" class="wpezimport-loader" style="display:none;">
                                             <span class="spinner is-active"></span>
@@ -683,18 +683,18 @@ wp_enqueue_script('wpezimport-admin-woo-tabs', plugins_url('../assets/js/admin-w
 
                     <div id="save-import-options">
                         <div class="wpezimport-option-row">
-                            <label for="import_name"><?php _e('Import Name', 'wpezimport'); ?></label>
-                            <input type="text" name="import_name" id="import_name" class="regular-text" value="<?php echo $import_name; ?>" placeholder="<?php _e('Optional - Auto-generated if left empty', 'wpezimport'); ?>">
-                            <p class="description"><?php _e('Leave empty to auto-generate name with current date and time', 'wpezimport'); ?></p>
+                            <label for="import_name"><?php esc_html_e('Import Name', 'ezimport-for-woocommerce'); ?></label>
+                            <input type="text" name="import_name" id="import_name" class="regular-text" value="<?php echo esc_attr($import_name); ?>" placeholder="<?php esc_html_e('Optional - Auto-generated if left empty', 'ezimport-for-woocommerce'); ?>">
+                            <p class="description"><?php esc_html_e('Leave empty to auto-generate name with current date and time', 'ezimport-for-woocommerce'); ?></p>
                         </div>
                     </div>
                 </div>
 
                 <div class="wpezimport-form-buttons">
-                    <button type="submit" id="wpezimport-mapping-button" class="button button-primary"><?php _e('Save Import Configuration', 'wpezimport'); ?></button>
+                    <button type="submit" id="wpezimport-mapping-button" class="button button-primary"><?php esc_html_e('Save Import Configuration', 'ezimport-for-woocommerce'); ?></button>
                     <div id="wpezimport-mapping-loader" class="wpezimport-loader">
                         <span class="spinner is-active"></span>
-                        <span><?php _e('Saving...', 'wpezimport'); ?></span>
+                        <span><?php esc_html_e('Saving...', 'ezimport-for-woocommerce'); ?></span>
                     </div>
                 </div>
             </div>

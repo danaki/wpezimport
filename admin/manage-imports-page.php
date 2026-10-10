@@ -14,7 +14,7 @@ if (!defined('WPINC')) {
 // (see wpezimport.php) so that redirects happen before any output.
 
 if (!current_user_can('manage_options')) {
-    wp_die(__('You do not have permission to access this page.', 'wpezimport'));
+    wp_die(esc_html__('You do not have permission to access this page.', 'ezimport-for-woocommerce'));
 }
 
 // Get all saved imports
@@ -25,33 +25,33 @@ $imports = $wpdb->get_results("SELECT * FROM $table_name ORDER BY created_at DES
 // Display action result notices
 if (isset($_GET['deleted'])) {
     if ($_GET['deleted'] === '1') {
-        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Import successfully deleted.', 'wpezimport') . '</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Import successfully deleted.', 'ezimport-for-woocommerce') . '</p></div>';
     } else {
-        echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Failed to delete import.', 'wpezimport') . '</p></div>';
+        echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Failed to delete import.', 'ezimport-for-woocommerce') . '</p></div>';
     }
 }
 ?>
 
 <div class="wrap wpezimport-admin-wrap">
-    <h1 class="wp-heading-inline"><?php _e('Manage Imports', 'wpezimport'); ?></h1>
-    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new')); ?>" class="page-title-action"><?php _e('Add New', 'wpezimport'); ?></a>
+    <h1 class="wp-heading-inline"><?php esc_html_e('Manage Imports', 'ezimport-for-woocommerce'); ?></h1>
+    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new')); ?>" class="page-title-action"><?php esc_html_e('Add New', 'ezimport-for-woocommerce'); ?></a>
     <hr class="wp-header-end">
 
     <?php if (empty($imports)) : ?>
         <div class="wpezimport-notice-box">
-            <p><?php _e('No saved imports found. Create a new import to get started.', 'wpezimport'); ?></p>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new')); ?>" class="button button-primary"><?php _e('Create New Import', 'wpezimport'); ?></a>
+            <p><?php esc_html_e('No saved imports found. Create a new import to get started.', 'ezimport-for-woocommerce'); ?></p>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new')); ?>" class="button button-primary"><?php esc_html_e('Create New Import', 'ezimport-for-woocommerce'); ?></a>
         </div>
     <?php else : ?>
         <table class="wp-list-table widefat striped">
             <thead>
                 <tr>
-                    <th scope="col"><?php _e('Name', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Type', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('URL of Import', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Created', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Last Run', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Actions', 'wpezimport'); ?></th>
+                    <th scope="col"><?php esc_html_e('Name', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Type', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('URL of Import', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Created', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Last Run', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Actions', 'ezimport-for-woocommerce'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -64,7 +64,7 @@ if (isset($_GET['deleted'])) {
                             if ($import->type === 'url' && !empty($import->url)) {
                                 echo '<a href="' . esc_url($import->url) . '" target="_blank">' . esc_html($import->url) . '</a>';
                             } else {
-                                _e('N/A', 'wpezimport');
+                                esc_html_e('N/A', 'ezimport-for-woocommerce');
                             }
                             ?>
                         </td>
@@ -74,20 +74,20 @@ if (isset($_GET['deleted'])) {
                             if ($import->last_run) {
                                 echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($import->last_run)));
                             } else {
-                                _e('Never', 'wpezimport');
+                                esc_html_e('Never', 'ezimport-for-woocommerce');
                             }
                             ?>
                         </td>
                         <td class="wpezimport-actions">
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import->id)); ?>" class="button"><?php _e('Run', 'wpezimport'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import->id)); ?>" class="button"><?php esc_html_e('Run', 'ezimport-for-woocommerce'); ?></a>
                             <?php if ($import->last_run): ?>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-statistics&import_id=' . $import->id)); ?>" class="button button-secondary"><?php _e('Statistics', 'wpezimport'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-statistics&import_id=' . $import->id)); ?>" class="button button-secondary"><?php esc_html_e('Statistics', 'ezimport-for-woocommerce'); ?></a>
                             <?php endif; ?>
                             <?php if ($import->type === 'url'): ?>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-schedule&import_id=' . $import->id)); ?>" class="button button-secondary"><?php _e('Schedule', 'wpezimport'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-schedule&import_id=' . $import->id)); ?>" class="button button-secondary"><?php esc_html_e('Schedule', 'ezimport-for-woocommerce'); ?></a>
                             <?php endif; ?>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new&step=2&edit_import=' . $import->id)); ?>" class="button"><?php _e('Edit', 'wpezimport'); ?></a>
-                            <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=wpezimport-manage&action=delete&import_id=' . $import->id), 'wpezimport_delete_import_' . $import->id)); ?>" class="button delete" onclick="return confirm('<?php echo esc_js(__('Are you sure you want to delete this import?', 'wpezimport')); ?>');"><?php _e('Delete', 'wpezimport'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new&step=2&edit_import=' . $import->id)); ?>" class="button"><?php esc_html_e('Edit', 'ezimport-for-woocommerce'); ?></a>
+                            <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin.php?page=wpezimport-manage&action=delete&import_id=' . $import->id), 'wpezimport_delete_import_' . $import->id)); ?>" class="button delete" onclick="return confirm('<?php echo esc_js(__('Are you sure you want to delete this import?', 'ezimport-for-woocommerce')); ?>');"><?php esc_html_e('Delete', 'ezimport-for-woocommerce'); ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

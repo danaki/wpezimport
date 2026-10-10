@@ -21,11 +21,11 @@ $import_id = isset($_GET['import_id']) ? intval($_GET['import_id']) : 0;
 if ($import_id <= 0) {
     ?>
     <div class="wrap wpezimport-admin-wrap">
-        <h1><?php _e('Import Statistics', 'wpezimport'); ?></h1>
+        <h1><?php esc_html_e('Import Statistics', 'ezimport-for-woocommerce'); ?></h1>
         <div class="notice notice-error">
-            <p><?php _e('Invalid import ID.', 'wpezimport'); ?></p>
+            <p><?php esc_html_e('Invalid import ID.', 'ezimport-for-woocommerce'); ?></p>
         </div>
-        <p><a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php _e('Back to Manage Imports', 'wpezimport'); ?></a></p>
+        <p><a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a></p>
     </div>
     <?php
     return;
@@ -37,11 +37,11 @@ $import = wpezimport_get_import($import_id);
 if (!$import) {
     ?>
     <div class="wrap wpezimport-admin-wrap">
-        <h1><?php _e('Import Statistics', 'wpezimport'); ?></h1>
+        <h1><?php esc_html_e('Import Statistics', 'ezimport-for-woocommerce'); ?></h1>
         <div class="notice notice-error">
-            <p><?php _e('Import not found.', 'wpezimport'); ?></p>
+            <p><?php esc_html_e('Import not found.', 'ezimport-for-woocommerce'); ?></p>
         </div>
-        <p><a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php _e('Back to Manage Imports', 'wpezimport'); ?></a></p>
+        <p><a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a></p>
     </div>
     <?php
     return;
@@ -52,43 +52,43 @@ $statistics = wpezimport_get_statistics($import_id, true);
 ?>
 
 <div class="wrap wpezimport-admin-wrap">
-    <h1 class="wp-heading-inline"><?php printf(__('Statistics for: %s', 'wpezimport'), esc_html($import->name)); ?></h1>
-    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="page-title-action"><?php _e('Back to Manage Imports', 'wpezimport'); ?></a>
+    <h1 class="wp-heading-inline"><?php /* translators: %s: name of the import. */ printf(esc_html__('Statistics for: %s', 'ezimport-for-woocommerce'), esc_html($import->name)); ?></h1>
+    <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="page-title-action"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a>
     <hr class="wp-header-end">
 
     <div class="wpezimport-import-info">
         <table class="widefat fixed" style="max-width: 600px;">
             <tbody>
                 <tr>
-                    <th scope="row"><?php _e('Import Name', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Import Name', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html($import->name); ?></td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php _e('Type', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Type', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html(ucfirst($import->type)); ?></td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php _e('Post Type', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Post Type', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html($import->post_type); ?></td>
                 </tr>
                 <?php if ($import->type === 'url' && !empty($import->url)): ?>
                 <tr>
-                    <th scope="row"><?php _e('URL', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('URL', 'ezimport-for-woocommerce'); ?></th>
                     <td><a href="<?php echo esc_url($import->url); ?>" target="_blank"><?php echo esc_html($import->url); ?></a></td>
                 </tr>
                 <?php endif; ?>
                 <tr>
-                    <th scope="row"><?php _e('Created', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Created', 'ezimport-for-woocommerce'); ?></th>
                     <td><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($import->created_at))); ?></td>
                 </tr>
                 <tr>
-                    <th scope="row"><?php _e('Last Run', 'wpezimport'); ?></th>
+                    <th scope="row"><?php esc_html_e('Last Run', 'ezimport-for-woocommerce'); ?></th>
                     <td>
                         <?php
                         if ($import->last_run) {
                             echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($import->last_run)));
                         } else {
-                            _e('Never', 'wpezimport');
+                            esc_html_e('Never', 'ezimport-for-woocommerce');
                         }
                         ?>
                     </td>
@@ -97,22 +97,22 @@ $statistics = wpezimport_get_statistics($import_id, true);
         </table>
     </div>
 
-    <h2><?php _e('Import Run History', 'wpezimport'); ?></h2>
+    <h2><?php esc_html_e('Import Run History', 'ezimport-for-woocommerce'); ?></h2>
 
     <?php if (empty($statistics)): ?>
         <div class="wpezimport-notice-box">
-            <p><?php _e('No statistics available for this import yet. Run the import to generate statistics.', 'wpezimport'); ?></p>
-            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button button-primary"><?php _e('Run Import', 'wpezimport'); ?></a>
+            <p><?php esc_html_e('No statistics available for this import yet. Run the import to generate statistics.', 'ezimport-for-woocommerce'); ?></p>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button button-primary"><?php esc_html_e('Run Import', 'ezimport-for-woocommerce'); ?></a>
         </div>
     <?php else: ?>
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th scope="col"><?php _e('Run Date', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Created', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Updated', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Errors', 'wpezimport'); ?></th>
-                    <th scope="col"><?php _e('Total Processed', 'wpezimport'); ?></th>
+                    <th scope="col"><?php esc_html_e('Run Date', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Created', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Updated', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Errors', 'ezimport-for-woocommerce'); ?></th>
+                    <th scope="col"><?php esc_html_e('Total Processed', 'ezimport-for-woocommerce'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -134,15 +134,15 @@ $statistics = wpezimport_get_statistics($import_id, true);
             </tbody>
             <tfoot>
                 <tr>
-                    <th scope="row"><?php _e('Totals', 'wpezimport'); ?></th>
-                    <td><strong><?php echo array_sum(array_column($statistics, 'created')); ?></strong></td>
-                    <td><strong><?php echo array_sum(array_column($statistics, 'updated')); ?></strong></td>
-                    <td><strong><?php echo array_sum(array_column($statistics, 'errors')); ?></strong></td>
+                    <th scope="row"><?php esc_html_e('Totals', 'ezimport-for-woocommerce'); ?></th>
+                    <td><strong><?php echo esc_html(array_sum(array_column($statistics, 'created'))); ?></strong></td>
+                    <td><strong><?php echo esc_html(array_sum(array_column($statistics, 'updated'))); ?></strong></td>
+                    <td><strong><?php echo esc_html(array_sum(array_column($statistics, 'errors'))); ?></strong></td>
                     <td><strong><?php
                         $total = array_sum(array_column($statistics, 'created')) +
                                  array_sum(array_column($statistics, 'updated')) +
                                  array_sum(array_column($statistics, 'errors'));
-                        echo $total;
+                        echo esc_html($total);
                     ?></strong></td>
                 </tr>
             </tfoot>
@@ -150,16 +150,17 @@ $statistics = wpezimport_get_statistics($import_id, true);
 
         <p class="wpezimport-stats-summary">
             <?php printf(
-                __('This import has been run %d time(s).', 'wpezimport'),
-                count($statistics)
+                /* translators: %d: number of completed import runs. */
+                esc_html__('This import has been run %d time(s).', 'ezimport-for-woocommerce'),
+                absint(count($statistics))
             ); ?>
         </p>
     <?php endif; ?>
 
     <p class="wpezimport-actions-row" style="margin-top: 20px;">
-        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button button-primary"><?php _e('Run Import Again', 'wpezimport'); ?></a>
-        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new&step=2&edit_import=' . $import_id)); ?>" class="button"><?php _e('Edit Import', 'wpezimport'); ?></a>
-        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php _e('Back to Manage Imports', 'wpezimport'); ?></a>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-confirm&import_id=' . $import_id)); ?>" class="button button-primary"><?php esc_html_e('Run Import Again', 'ezimport-for-woocommerce'); ?></a>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-new&step=2&edit_import=' . $import_id)); ?>" class="button"><?php esc_html_e('Edit Import', 'ezimport-for-woocommerce'); ?></a>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=wpezimport-manage')); ?>" class="button"><?php esc_html_e('Back to Manage Imports', 'ezimport-for-woocommerce'); ?></a>
     </p>
 </div>
 

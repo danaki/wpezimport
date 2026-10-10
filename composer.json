@@ -2,7 +2,7 @@
     "name": "wpezimport/wpezimport",
     "description": "Wordpress plugin for importing data",
     "type": "project",
-    "license": "GPLv2",
+    "license": "GPL-2.0-or-later",
     "autoload": {
         "psr-4": {
             "Wpezimport\\Wpezimport\\": "src/"

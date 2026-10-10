@@ -79,7 +79,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
 
     $import = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $import_id));
     if (!$import) {
-        return array('success' => false, 'message' => __('Import not found.', 'wpezimport'));
+        return array('success' => false, 'message' => __('Import not found.', 'ezimport-for-woocommerce'));
     }
 
     // Prevent re-triggering while actively processing
@@ -87,7 +87,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
     if ($import->cron_status === 'processing') {
         $started = strtotime($import->cron_started_at);
         if ($started && (time() - $started) < $lock_timeout) {
-            return array('success' => false, 'message' => __('Import is currently being processed.', 'wpezimport'));
+            return array('success' => false, 'message' => __('Import is currently being processed.', 'ezimport-for-woocommerce'));
         }
         // Stale lock — allow re-trigger
     }
@@ -112,7 +112,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
         ));
 
         if (is_wp_error($response)) {
-            return array('success' => false, 'message' => __('Failed to fetch URL: ', 'wpezimport') . $response->get_error_message());
+            return array('success' => false, 'message' => __('Failed to fetch URL: ', 'ezimport-for-woocommerce') . $response->get_error_message());
         }
 
         $http_code = wp_remote_retrieve_response_code($response);
@@ -120,7 +120,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
         // 304 Not Modified — content hasn't changed
         if ($http_code === 304) {
             if ($import->cron_status === 'idle' && $import->cron_phase === 'complete') {
-                return array('success' => true, 'message' => __('Content has not changed since last import. Nothing to do.', 'wpezimport'), 'status' => 'idle');
+                return array('success' => true, 'message' => __('Content has not changed since last import. Nothing to do.', 'ezimport-for-woocommerce'), 'status' => 'idle');
             }
             // Was incomplete — re-use existing temp file if present, or re-fetch without conditions
             $existing_file = get_transient('wpezimport_run_file_' . $import_id);
@@ -130,7 +130,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
                 // Force full fetch
                 $response = wp_remote_get($import->url, array('timeout' => 60, 'sslverify' => apply_filters('wpezimport_sslverify', true)));
                 if (is_wp_error($response)) {
-                    return array('success' => false, 'message' => __('Failed to fetch URL: ', 'wpezimport') . $response->get_error_message());
+                    return array('success' => false, 'message' => __('Failed to fetch URL: ', 'ezimport-for-woocommerce') . $response->get_error_message());
                 }
             }
         }
@@ -138,7 +138,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
         if (empty($run_file)) {
             $body = wp_remote_retrieve_body($response);
             if (empty($body)) {
-                return array('success' => false, 'message' => __('Empty response from URL.', 'wpezimport'));
+                return array('success' => false, 'message' => __('Empty response from URL.', 'ezimport-for-woocommerce'));
             }
 
             // Save to temp file
@@ -149,7 +149,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
             }
             $run_file = $dir . '/run_' . $import_id . '_' . time() . '.xml';
             if (file_put_contents($run_file, $body) === false) {
-                return array('success' => false, 'message' => __('Failed to save downloaded XML.', 'wpezimport'));
+                return array('success' => false, 'message' => __('Failed to save downloaded XML.', 'ezimport-for-woocommerce'));
             }
 
             // Cache headers for next trigger
@@ -161,7 +161,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
         // Clean up any previous temp file
         $prev_file = get_transient('wpezimport_run_file_' . $import_id);
         if ($prev_file && $prev_file !== $run_file && file_exists($prev_file)) {
-            @unlink($prev_file);
+            wp_delete_file($prev_file);
         }
         set_transient('wpezimport_run_file_' . $import_id, $run_file, 7200);
     }
@@ -175,7 +175,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
             $run_file = $import->file_path;
             set_transient('wpezimport_run_file_' . $import_id, $run_file, 7200);
         } else {
-            return array('success' => false, 'message' => __('No file available. Please upload a file first.', 'wpezimport'));
+            return array('success' => false, 'message' => __('No file available. Please upload a file first.', 'ezimport-for-woocommerce'));
         }
     }
 
@@ -198,7 +198,7 @@ function wpezimport_trigger_import($import_id, $file_override = '') {
     wpezimport_update_import_state($import_id, $update);
     wpezimport_import_log($import_id, 'Triggered. File: ' . basename($run_file));
 
-    return array('success' => true, 'message' => __('Import triggered.', 'wpezimport'), 'status' => 'triggered');
+    return array('success' => true, 'message' => __('Import triggered.', 'ezimport-for-woocommerce'), 'status' => 'triggered');
 }
 
 // ============================================================
@@ -228,14 +228,14 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
 
     $import = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $import_id));
     if (!$import) {
-        return array('success' => false, 'status' => 'error', 'message' => __('Import not found.', 'wpezimport'));
+        return array('success' => false, 'status' => 'error', 'message' => __('Import not found.', 'ezimport-for-woocommerce'));
     }
 
     if (!in_array($import->cron_status, array('triggered', 'processing'), true)) {
         return array(
             'success' => true,
             'status'  => $import->cron_status,
-            'message' => __('Import is not in a runnable state.', 'wpezimport'),
+            'message' => __('Import is not in a runnable state.', 'ezimport-for-woocommerce'),
             'phase'   => $import->cron_phase,
         );
     }
@@ -245,7 +245,7 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
     if ($import->cron_status === 'processing') {
         $started = strtotime($import->cron_started_at);
         if ($started && (time() - $started) < $lock_timeout) {
-            return array('success' => false, 'status' => 'processing', 'message' => __('Import is already being processed.', 'wpezimport'));
+            return array('success' => false, 'status' => 'processing', 'message' => __('Import is already being processed.', 'ezimport-for-woocommerce'));
         }
     }
 
@@ -291,7 +291,7 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
         }
         if (!$data_file || !file_exists($data_file)) {
             wpezimport_update_import_state($import_id, array('cron_status' => 'triggered'));
-            return array('success' => false, 'status' => 'error', 'message' => __('Data file not found. Please trigger the import again.', 'wpezimport'));
+            return array('success' => false, 'status' => 'error', 'message' => __('Data file not found. Please trigger the import again.', 'ezimport-for-woocommerce'));
         }
     }
 
@@ -309,7 +309,7 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
             'cron_status' => 'idle',
             'cron_phase'  => 'complete',
         ));
-        return array('success' => true, 'status' => 'complete', 'message' => __('No items found.', 'wpezimport'), 'total' => 0);
+        return array('success' => true, 'status' => 'complete', 'message' => __('No items found.', 'ezimport-for-woocommerce'), 'total' => 0);
     }
 
     $total_items = count($items);
@@ -341,7 +341,8 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
             return array(
                 'success'  => true,
                 'status'   => 'processing',
-                'message'  => sprintf(__('Paused at item %d of %d.', 'wpezimport'), $i, $total_items),
+                /* translators: 1: current item number, 2: total number of items. */
+                'message'  => sprintf(__('Paused at item %1$d of %2$d.', 'ezimport-for-woocommerce'), $i, $total_items),
                 'last_item'  => $i,
                 'total'      => $total_items,
                 'created'    => $created,
@@ -378,7 +379,7 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
         );
 
         // Default title
-        $item_title = !empty($post_data['post_title']) ? $post_data['post_title'] : (__('Imported Item', 'wpezimport') . ' ' . date('Y-m-d H:i:s'));
+        $item_title = !empty($post_data['post_title']) ? $post_data['post_title'] : (__('Imported Item', 'ezimport-for-woocommerce') . ' ' . gmdate('Y-m-d H:i:s'));
         if (empty($post_data['post_title'])) {
             $post_data['post_title'] = $item_title;
         }
@@ -403,7 +404,8 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
             $skipped++;
             $item_resolution['resolution'] = array(
                 'status'  => 'skipped',
-                'message' => sprintf(__('Unique identifier "%s" resolved to empty value', 'wpezimport'), $unique_identifier),
+                /* translators: %s: the configured unique identifier. */
+                'message' => sprintf(__('Unique identifier "%s" resolved to empty value', 'ezimport-for-woocommerce'), $unique_identifier),
                 'title'   => $item_title,
             );
             $resolved_items[] = $item_resolution;
@@ -596,7 +598,7 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
     // Clean up temp file
     $tmp = get_transient('wpezimport_run_file_' . $import_id);
     if ($tmp && file_exists($tmp)) {
-        @unlink($tmp);
+        wp_delete_file($tmp);
     }
     delete_transient('wpezimport_run_file_' . $import_id);
 
@@ -614,7 +616,8 @@ function wpezimport_process_import_batch($import_id, $time_limit = 55) {
     return array(
         'success'    => true,
         'status'     => 'complete',
-        'message'    => sprintf(__('Import complete. %d items processed.', 'wpezimport'), $total_items),
+        /* translators: %d: number of processed items. */
+        'message'    => sprintf(__('Import complete. %d items processed.', 'ezimport-for-woocommerce'), $total_items),
         'last_item'  => $total_items,
         'total'      => $total_items,
         'created'    => $created,
@@ -650,7 +653,7 @@ function wpezimport_batch_load_items($data_file, $is_xml, array $options = array
             $err = '';
             foreach (libxml_get_errors() as $e) { $err .= $e->message . ' '; }
             libxml_clear_errors();
-            return new WP_Error('xml_parse', __('XML parse error: ', 'wpezimport') . trim($err));
+            return new WP_Error('xml_parse', __('XML parse error: ', 'ezimport-for-woocommerce') . trim($err));
         }
 
         $xml_path = isset($options['selected_xpath']) && !empty($options['selected_xpath']) ? $options['selected_xpath'] : '//item';
@@ -675,7 +678,7 @@ function wpezimport_batch_load_items($data_file, $is_xml, array $options = array
         $spreadsheet->disconnectWorksheets();
         unset($spreadsheet);
     } catch (Exception $e) {
-        return new WP_Error('file_parse', __('File parse error: ', 'wpezimport') . $e->getMessage());
+        return new WP_Error('file_parse', __('File parse error: ', 'ezimport-for-woocommerce') . $e->getMessage());
     }
 
     if (empty($rows)) {
@@ -1085,13 +1088,13 @@ function wpezimport_batch_process_taxonomies_csv($post_id, $row, $mappings, $pos
  */
 function wpezimport_ajax_trigger_import() {
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('Permission denied.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Permission denied.', 'ezimport-for-woocommerce')));
     }
     check_ajax_referer('wpezimport_batch_nonce', 'nonce');
 
     $import_id = isset($_POST['import_id']) ? intval($_POST['import_id']) : 0;
     if ($import_id <= 0) {
-        wp_send_json_error(array('message' => __('Missing import ID.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing import ID.', 'ezimport-for-woocommerce')));
     }
 
     $result = wpezimport_trigger_import($import_id);
@@ -1109,13 +1112,13 @@ add_action('wp_ajax_wpezimport_trigger_import', 'wpezimport_ajax_trigger_import'
  */
 function wpezimport_ajax_process_batch() {
     if (!current_user_can('manage_options')) {
-        wp_send_json_error(array('message' => __('Permission denied.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Permission denied.', 'ezimport-for-woocommerce')));
     }
     check_ajax_referer('wpezimport_batch_nonce', 'nonce');
 
     $import_id = isset($_POST['import_id']) ? intval($_POST['import_id']) : 0;
     if ($import_id <= 0) {
-        wp_send_json_error(array('message' => __('Missing import ID.', 'wpezimport')));
+        wp_send_json_error(array('message' => __('Missing import ID.', 'ezimport-for-woocommerce')));
     }
 
     // Use a conservative time limit (leave headroom for PHP max_execution_time)

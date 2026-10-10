@@ -19,6 +19,21 @@ if (!function_exists('plugin_dir_path')) {
         return trailingslashit(dirname($file));
     }
 }
+if (!function_exists('wp_parse_url')) {
+    function wp_parse_url($url, $component = -1) {
+        return parse_url($url, $component);
+    }
+}
+if (!function_exists('wp_delete_file')) {
+    function wp_delete_file($file) {
+        return @unlink($file);
+    }
+}
+if (!function_exists('wp_rand')) {
+    function wp_rand($min, $max) {
+        return random_int($min, $max);
+    }
+}
 
 // Plugin code calls error_log() liberally; keep it out of the test output
 ini_set('error_log', sys_get_temp_dir() . '/wpezimport-phpunit.log');

@@ -2,3 +2,4 @@ composer.phar
 **/*.cache
 .phpunit.result.cache
 /vendor/
+/dist/

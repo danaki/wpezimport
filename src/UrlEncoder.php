@@ -46,7 +46,7 @@ class UrlEncoder
 
         // Pre-encode spaces to allow parse_url to work correctly
         $pre_encoded_url = str_replace(' ', '%20', $url);
-        $parsed = parse_url($pre_encoded_url);
+        $parsed = wp_parse_url($pre_encoded_url);
 
         if ($parsed === false || !isset($parsed['scheme']) || !isset($parsed['host'])) {
             // If parse_url fails, do basic encoding of known problematic characters
